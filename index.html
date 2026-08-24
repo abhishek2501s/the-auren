@@ -18,10 +18,11 @@
       --text-muted: #808080;
       --white: #ffffff;
       --black: #000000;
+      --danger: #e05656;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; line-height: 1.5; }
+    body { background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; line-height: 1.5; overflow-x: hidden; }
     a { color: inherit; text-decoration: none; }
 
     /* Mandatory Access Modal */
@@ -40,7 +41,7 @@
     .modal-box {
       background: var(--surface);
       border: 1px solid var(--surface-border);
-      padding: 40px 30px;
+      padding: 35px 25px;
       max-width: 440px;
       width: 100%;
       text-align: center;
@@ -61,7 +62,7 @@
       letter-spacing: 1px;
       transition: border-color 0.2s ease;
     }
-    .input-field:focus { border-color: #555; }
+    .input-field:focus { border-color: #666; }
     textarea.input-field { resize: none; height: 70px; }
 
     .btn-solid {
@@ -69,7 +70,7 @@
       background: var(--white);
       color: var(--black);
       border: none;
-      padding: 14px;
+      padding: 13px;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 2px;
@@ -79,7 +80,7 @@
     }
     .btn-solid:hover { opacity: 0.85; }
 
-    /* Top Bar */
+    /* Top Strip */
     .top-strip {
       background: #000;
       color: var(--text-muted);
@@ -96,7 +97,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 22px 6%;
+      padding: 18px 6%;
       background: rgba(5, 5, 5, 0.95);
       backdrop-filter: blur(10px);
       position: sticky;
@@ -104,15 +105,85 @@
       z-index: 100;
       border-bottom: 1px solid var(--surface-border);
     }
-    .brand-logo { font-size: 19px; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; }
-    .nav-actions { display: flex; align-items: center; gap: 20px; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
-    .size-guide-link { color: var(--text-muted); cursor: pointer; transition: color 0.2s; }
-    .size-guide-link:hover { color: var(--white); }
-    .member-tag { color: var(--white); font-weight: 600; }
+    .brand-logo { font-size: 18px; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; }
+    .nav-actions { display: flex; align-items: center; gap: 18px; }
+    .nav-link-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; transition: color 0.2s; }
+    .nav-link-btn:hover { color: var(--white); }
+    
+    .profile-trigger {
+      background: transparent;
+      border: 1px solid var(--surface-border);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--white);
+      transition: border-color 0.2s;
+    }
+    .profile-trigger:hover { border-color: var(--white); }
+    .profile-trigger svg { width: 17px; height: 17px; fill: currentColor; }
 
-    /* Hero Section */
+    /* Drawer / Slide-out Dashboard */
+    .drawer-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 9990;
+    }
+    .drawer-overlay.active { opacity: 1; visibility: visible; }
+
+    .drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 100%;
+      max-width: 380px;
+      height: 100%;
+      background: var(--surface);
+      border-left: 1px solid var(--surface-border);
+      z-index: 9991;
+      padding: 25px 22px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .drawer.active { right: 0; }
+
+    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--surface-border); }
+    .drawer-header h3 { font-size: 13px; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; }
+    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+
+    .drawer-user-info { padding: 18px 0; border-bottom: 1px solid var(--surface-border); }
+    .user-greeting { font-size: 14px; font-weight: 600; letter-spacing: 1px; }
+    .user-contact { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+    .drawer-menu { list-style: none; margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
+    .drawer-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      background: #000;
+      border: 1px solid var(--surface-border);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .drawer-item:hover { border-color: #444; }
+
+    /* Hero */
     .hero {
-      height: 65vh;
+      height: 60vh;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -122,126 +193,185 @@
       padding: 0 20px;
       border-bottom: 1px solid var(--surface-border);
     }
-    .hero h1 { font-size: 38px; letter-spacing: 8px; font-weight: 300; margin-bottom: 10px; text-transform: uppercase; }
+    .hero h1 { font-size: 36px; letter-spacing: 8px; font-weight: 300; margin-bottom: 10px; text-transform: uppercase; }
     .hero p { color: var(--text-muted); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; }
 
-    /* Products Area */
+    /* Products */
     .products { padding: 70px 6%; max-width: 1400px; margin: 0 auto; }
     .section-head { text-align: center; margin-bottom: 50px; }
     .section-head h2 { font-size: 13px; letter-spacing: 4px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 35px; }
     
-    .card { background: var(--surface); border: 1px solid var(--surface-border); padding: 18px; transition: transform 0.3s ease, border-color 0.3s ease; }
+    .card { background: var(--surface); border: 1px solid var(--surface-border); padding: 16px; position: relative; transition: transform 0.3s ease, border-color 0.3s ease; }
     .card:hover { border-color: #383838; transform: translateY(-4px); }
     
-    .card-img-wrap { width: 100%; height: 380px; overflow: hidden; background: #000; }
+    .card-img-wrap { width: 100%; height: 360px; overflow: hidden; background: #000; position: relative; }
     .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
     .card:hover img { transform: scale(1.03); }
 
-    .card-meta { padding-top: 18px; }
-    .card-title { font-size: 13px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+    .wishlist-icon-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      border: 1px solid #333;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #fff;
+    }
+    .wishlist-icon-btn.active { color: var(--danger); border-color: var(--danger); }
+    .wishlist-icon-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+    .card-meta { padding-top: 16px; }
+    .card-title { font-size: 12px; font-weight: 500; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
     .card-specs { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
-    .card-price { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 16px; letter-spacing: 1px; }
+    .card-price { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 14px; letter-spacing: 1px; }
 
     /* Size Switcher */
-    .size-row { display: flex; gap: 8px; margin-bottom: 16px; }
-    .size-btn { flex: 1; background: transparent; border: 1px solid var(--surface-border); color: var(--text-muted); font-size: 10px; padding: 8px 0; cursor: pointer; transition: all 0.2s; letter-spacing: 1px; font-weight: 600; }
+    .size-row { display: flex; gap: 6px; margin-bottom: 14px; }
+    .size-btn { flex: 1; background: transparent; border: 1px solid var(--surface-border); color: var(--text-muted); font-size: 10px; padding: 7px 0; cursor: pointer; transition: all 0.2s; letter-spacing: 1px; font-weight: 600; }
     .size-btn.active { background: var(--white); color: var(--black); border-color: var(--white); }
 
     /* Buttons */
-    .btn-row { display: flex; gap: 10px; }
-    .btn-outline { flex: 1; background: transparent; color: var(--white); border: 1px solid #333; padding: 12px; font-size: 10px; font-weight: 600; letter-spacing: 2px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+    .btn-row { display: flex; gap: 8px; }
+    .btn-outline { flex: 1; background: transparent; color: var(--white); border: 1px solid #333; padding: 11px; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
     .btn-outline:hover { background: #161616; border-color: #666; }
-    .btn-action { flex: 1; background: var(--white); color: var(--black); border: none; padding: 12px; font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; text-align: center; }
+    .btn-action { flex: 1; background: var(--white); color: var(--black); border: none; padding: 11px; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; text-align: center; }
     .btn-action:hover { opacity: 0.85; }
 
+    /* General Popups */
+    .gen-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 9998; padding: 20px; }
+    .gen-modal-box { background: var(--surface); border: 1px solid var(--surface-border); padding: 30px 24px; max-width: 480px; width: 100%; text-align: left; max-height: 85vh; overflow-y: auto; }
+    .gen-modal-box h3 { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; text-align: center; }
+    .gen-modal-box p, .gen-modal-box li { font-size: 11px; color: #ccc; line-height: 1.6; margin-bottom: 10px; letter-spacing: 0.5px; }
+
+    .size-table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 11px; }
+    .size-table th, .size-table td { border: 1px solid var(--surface-border); padding: 8px; text-align: center; }
+    .size-table th { background: #000; color: var(--text-muted); }
+
     /* Trust Pillars */
-    .pillars { border-top: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border); padding: 50px 6%; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; text-align: center; max-width: 1400px; margin: 60px auto 0; }
+    .pillars { border-top: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border); padding: 45px 6%; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px; text-align: center; max-width: 1400px; margin: 60px auto 0; }
     .pillar-item h3 { font-size: 11px; letter-spacing: 2px; font-weight: 600; text-transform: uppercase; margin-bottom: 6px; }
     .pillar-item p { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
 
-    /* Size Chart Popup */
-    .size-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 9998; padding: 20px; }
-    .size-chart-box { background: var(--surface); border: 1px solid var(--surface-border); padding: 30px; max-width: 480px; width: 100%; text-align: center; }
-    .size-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 11px; letter-spacing: 1px; }
-    .size-table th, .size-table td { border: 1px solid var(--surface-border); padding: 10px; text-align: center; }
-    .size-table th { background: #000; color: var(--text-muted); }
-
-    /* Floating Cart Bar */
-    .cart-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 440px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(12px); border: 1px solid #333; padding: 14px 22px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 900; }
+    /* Floating Bag Bar */
+    .cart-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(12px); border: 1px solid #333; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 900; }
     .cart-summary { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
 
-    footer { text-align: center; padding: 40px 20px; color: #444; font-size: 10px; letter-spacing: 2px; border-top: 1px solid var(--surface-border); margin-top: 80px; text-transform: uppercase; }
+    /* Star Rating System */
+    .star-rating { display: flex; justify-content: center; gap: 8px; margin: 15px 0; }
+    .star-btn { font-size: 24px; color: #444; cursor: pointer; background: none; border: none; transition: color 0.2s; }
+    .star-btn.active { color: #fff; }
+
+    footer { text-align: center; padding: 40px 20px; color: #444; font-size: 10px; letter-spacing: 2px; border-top: 1px solid var(--surface-border); margin-top: 60px; text-transform: uppercase; }
   </style>
 </head>
 <body>
 
-  <!-- Mandatory Member Signup -->
+  <!-- Mandatory Initial Member Signup -->
   <div id="signupModal" class="modal-overlay">
     <div class="modal-box">
       <h2>THE AUREN</h2>
-      <p>Private Member Access</p>
+      <p id="txt-modal-sub">Private Member Access</p>
       <form id="signupForm" onsubmit="saveUserAccess(event)">
         <input type="text" id="cName" class="input-field" placeholder="FULL NAME" required />
         <input type="email" id="cEmail" class="input-field" placeholder="EMAIL ADDRESS" required />
         <input type="tel" id="cPhone" class="input-field" placeholder="WHATSAPP NUMBER" required />
-        <textarea id="cAddress" class="input-field" placeholder="COMPLETE SHIPPING ADDRESS (WITH PINCODE)" required></textarea>
-        <button type="submit" class="btn-solid">Enter Store</button>
+        <textarea id="cAddress" class="input-field" placeholder="COMPLETE DELIVERY ADDRESS (PINCODE, CITY, STATE)" required></textarea>
+        <button type="submit" class="btn-solid" id="txt-btn-enter">Enter Store</button>
       </form>
     </div>
   </div>
 
-  <!-- Size Chart Popup -->
-  <div id="sizeModal" class="size-modal" onclick="closeSizeChart(event)">
-    <div class="size-chart-box" onclick="event.stopPropagation()">
-      <h3 style="font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px;">Size Guide (Inches)</h3>
-      <table class="size-table">
-        <thead>
-          <tr>
-            <th>SIZE</th>
-            <th>CHEST</th>
-            <th>LENGTH</th>
-            <th>SHOULDER</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>S</td><td>42"</td><td>27.5"</td><td>21"</td></tr>
-          <tr><td>M</td><td>44"</td><td>28.5"</td><td>22"</td></tr>
-          <tr><td>L</td><td>46"</td><td>29.5"</td><td>23"</td></tr>
-          <tr><td>XL</td><td>48"</td><td>30.5"</td><td>24"</td></tr>
-        </tbody>
-      </table>
-      <button class="btn-outline" style="width: 100%;" onclick="document.getElementById('sizeModal').style.display='none'">Close</button>
-    </div>
-  </div>
+  <!-- Top Announcement Bar -->
+  <div class="top-strip" id="txt-announcement">Pan-India Express Dispatch | Limited Production Run</div>
 
-  <div class="top-strip">Pan-India Express Dispatch | Limited Production Run</div>
-
+  <!-- Main Navbar -->
   <header>
     <nav class="navbar">
       <a href="#" class="brand-logo">THE AUREN</a>
       <div class="nav-actions">
-        <span class="size-guide-link" onclick="document.getElementById('sizeModal').style.display='flex'">Size Guide</span>
-        <span id="userTag" class="member-tag">ACCESS</span>
+        <button class="nav-link-btn" onclick="openModal('sizeGuideModal')" id="txt-nav-guide">Size Guide</button>
+        <button class="nav-link-btn" onclick="openModal('aboutModal')" id="txt-nav-about">About</button>
+        
+        <!-- Profile Icon Trigger -->
+        <button class="profile-trigger" onclick="toggleDrawer(true)" title="My Account">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </button>
       </div>
     </nav>
   </header>
 
+  <!-- Slide-out Account Dashboard Drawer -->
+  <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer(false)"></div>
+  <aside id="accountDrawer" class="drawer">
+    <div class="drawer-header">
+      <h3 id="txt-dash-title">Account Center</h3>
+      <button class="close-btn" onclick="toggleDrawer(false)">✕</button>
+    </div>
+
+    <div class="drawer-user-info">
+      <div class="user-greeting" id="dashUserName">Guest User</div>
+      <div class="user-contact" id="dashUserContact">Access profile</div>
+    </div>
+
+    <ul class="drawer-menu">
+      <li class="drawer-item" onclick="openModal('profileEditModal')">
+        <span id="txt-menu-profile">Profile & Saved Address</span> <span>→</span>
+      </li>
+      <li class="drawer-item" onclick="openModal('wishlistModal')">
+        <span id="txt-menu-wishlist">My Wishlist (<span id="wishCount">0</span>)</span> <span>→</span>
+      </li>
+      <li class="drawer-item" onclick="openModal('paymentModal')">
+        <span id="txt-menu-pay">Payment & UPI Options</span> <span>→</span>
+      </li>
+      <li class="drawer-item" onclick="directRefundSupport()">
+        <span id="txt-menu-refund">Request Refund / Exchange</span> <span>→</span>
+      </li>
+      <li class="drawer-item" onclick="openModal('ratingModal')">
+        <span id="txt-menu-rate">Rate Experience</span> <span>★</span>
+      </li>
+      <li class="drawer-item" onclick="toggleLanguage()">
+        <span id="txt-menu-lang">Language: English / हिन्दी</span> <span>⇄</span>
+      </li>
+      <li class="drawer-item" onclick="openModal('policyModal')">
+        <span id="txt-menu-legal">Legal & Policies</span> <span>→</span>
+      </li>
+      <li class="drawer-item" onclick="openHelpSupport()">
+        <span id="txt-menu-help">Help Center (WhatsApp)</span> <span>→</span>
+      </li>
+      <li class="drawer-item" onclick="resetUserSession()" style="border-color: #331111; color: var(--danger);">
+        <span>Reset Session / Logout</span> <span>✕</span>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- Hero Section -->
   <section class="hero">
     <h1>ESSENTIALS 2026</h1>
-    <p>Contemporary Luxury & Heavyweight Silhouettes</p>
+    <p id="txt-hero-sub">Contemporary Luxury & Heavyweight Silhouettes</p>
   </section>
 
+  <!-- Products Section -->
   <section class="products">
     <div class="section-head">
-      <h2>Curated Drop 01</h2>
+      <h2 id="txt-drop-title">Curated Drop 01</h2>
     </div>
 
     <div class="grid">
       <!-- Product 1 -->
       <div class="card">
         <div class="card-img-wrap">
+          <button class="wishlist-icon-btn" id="wbtn-1" onclick="toggleWishlist(1, 'Structured Boxy Hoodie', 1499)">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
           <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80" alt="Structured Boxy Hoodie">
         </div>
         <div class="card-meta">
@@ -266,6 +396,9 @@
       <!-- Product 2 -->
       <div class="card">
         <div class="card-img-wrap">
+          <button class="wishlist-icon-btn" id="wbtn-2" onclick="toggleWishlist(2, 'Minimalist Suede Jacket', 2999)">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
           <img src="https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=800&q=80" alt="Minimalist Suede Jacket">
         </div>
         <div class="card-meta">
@@ -290,6 +423,9 @@
       <!-- Product 3 -->
       <div class="card">
         <div class="card-img-wrap">
+          <button class="wishlist-icon-btn" id="wbtn-3" onclick="toggleWishlist(3, 'Heavyweight Minimal Tee', 799)">
+            <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+          </button>
           <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80" alt="Heavyweight Minimal Tee">
         </div>
         <div class="card-meta">
@@ -317,7 +453,7 @@
   <section class="pillars">
     <div class="pillar-item">
       <h3>Heavyweight Fabrics</h3>
-      <p>Bespoke custom milled cottons & fabrics</p>
+      <p>Bespoke custom milled cottons</p>
     </div>
     <div class="pillar-item">
       <h3>Express Shipping</h3>
@@ -325,14 +461,117 @@
     </div>
     <div class="pillar-item">
       <h3>Direct Concierge</h3>
-      <p>Instant support & hassle-free size swaps</p>
+      <p>Instant WhatsApp size support</p>
     </div>
   </section>
 
-  <!-- Floating Bag -->
+  <!-- Floating Bag Bar -->
   <div id="cartBar" class="cart-bar" style="display: none;">
     <div class="cart-summary" id="cartLabel">0 Items | ₹0</div>
     <button class="btn-action" style="padding: 9px 16px;" onclick="checkoutBag()">Checkout (WhatsApp)</button>
+  </div>
+
+  <!-- POPUP MODALS -->
+
+  <!-- 1. Profile Edit Modal -->
+  <div id="profileEditModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>Profile & Shipping Address</h3>
+      <form onsubmit="updateProfileData(event)">
+        <input type="text" id="editName" class="input-field" placeholder="Full Name" required />
+        <input type="email" id="editEmail" class="input-field" placeholder="Email Address" required />
+        <input type="tel" id="editPhone" class="input-field" placeholder="Phone Number" required />
+        <textarea id="editAddress" class="input-field" placeholder="Complete Shipping Address" required></textarea>
+        <div class="btn-row" style="margin-top: 10px;">
+          <button type="submit" class="btn-solid">Save Updates</button>
+          <button type="button" class="btn-outline" onclick="closeModal('profileEditModal')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Wishlist Modal -->
+  <div id="wishlistModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>My Wishlist</h3>
+      <div id="wishlistContent" style="margin: 15px 0;">No items added yet.</div>
+      <button class="btn-solid" onclick="closeModal('wishlistModal')">Close</button>
+    </div>
+  </div>
+
+  <!-- 3. Payment & UPI Options Modal -->
+  <div id="paymentModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>Payment & Settlement</h3>
+      <p>Direct WhatsApp checkout supports 100% verified encrypted payment methods:</p>
+      <div style="background: #000; padding: 14px; border: 1px solid var(--surface-border); margin: 15px 0;">
+        <p style="margin: 0; color: #fff; font-weight: 600;">✓ UPI / QR Code (Google Pay, PhonePe, Paytm)</p>
+        <p style="margin: 6px 0 0; color: #fff; font-weight: 600;">✓ Direct IMPS / NEFT Bank Transfer</p>
+        <p style="margin: 6px 0 0; color: #fff; font-weight: 600;">✓ COD available on select PIN codes</p>
+      </div>
+      <p style="font-size: 10px; color: var(--text-muted);">Payment link & official invoices are shared directly on WhatsApp after checkout confirmation.</p>
+      <button class="btn-solid" style="margin-top: 10px;" onclick="closeModal('paymentModal')">Understood</button>
+    </div>
+  </div>
+
+  <!-- 4. Rate Experience Modal -->
+  <div id="ratingModal" class="gen-modal">
+    <div class="gen-modal-box" style="text-align: center;">
+      <h3>Rate THE AUREN</h3>
+      <p>How was your experience exploring our drop?</p>
+      <div class="star-rating">
+        <button class="star-btn" onclick="rateStar(1)">★</button>
+        <button class="star-btn" onclick="rateStar(2)">★</button>
+        <button class="star-btn" onclick="rateStar(3)">★</button>
+        <button class="star-btn" onclick="rateStar(4)">★</button>
+        <button class="star-btn" onclick="rateStar(5)">★</button>
+      </div>
+      <textarea id="rateFeedback" class="input-field" placeholder="Optional notes/feedback..."></textarea>
+      <div class="btn-row">
+        <button class="btn-solid" onclick="submitRating()">Submit Rating</button>
+        <button class="btn-outline" onclick="closeModal('ratingModal')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Size Guide Modal -->
+  <div id="sizeGuideModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>Size Guide (Inches)</h3>
+      <table class="size-table">
+        <thead>
+          <tr><th>SIZE</th><th>CHEST</th><th>LENGTH</th><th>SHOULDER</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>S</td><td>42"</td><td>27.5"</td><td>21"</td></tr>
+          <tr><td>M</td><td>44"</td><td>28.5"</td><td>22"</td></tr>
+          <tr><td>L</td><td>46"</td><td>29.5"</td><td>23"</td></tr>
+          <tr><td>XL</td><td>48"</td><td>30.5"</td><td>24"</td></tr>
+        </tbody>
+      </table>
+      <button class="btn-solid" onclick="closeModal('sizeGuideModal')">Close</button>
+    </div>
+  </div>
+
+  <!-- 6. About Modal -->
+  <div id="aboutModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>About THE AUREN</h3>
+      <p>THE AUREN is a modern design studio committed to heavyweight silhouettes, refined minimalism, and all-weather essentials.</p>
+      <p>Every piece is manufactured in strictly limited runs to maintain bespoke fabric quality and exclusivity.</p>
+      <button class="btn-solid" style="margin-top: 15px;" onclick="closeModal('aboutModal')">Close</button>
+    </div>
+  </div>
+
+  <!-- 7. Legal & Policies Modal -->
+  <div id="policyModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>Legal & Policies</h3>
+      <p><strong>Shipping Policy:</strong> Orders dispatch within 24-48 hours via BlueDart/Delhivery express courier. Tracking is shared on WhatsApp.</p>
+      <p><strong>Exchange & Returns:</strong> Hassle-free 7-day size swap. In case of manufacturing defects, 100% replacement or refund is credited within 48 hours.</p>
+      <p><strong>Privacy:</strong> We never share customer contact or shipping credentials with third-party aggregators.</p>
+      <button class="btn-solid" style="margin-top: 15px;" onclick="closeModal('policyModal')">Close</button>
+    </div>
   </div>
 
   <footer>
@@ -340,18 +579,53 @@
   </footer>
 
   <script>
+    const WA_NUMBER = "918447311105";
     let sizes = { 1: 'S', 2: 'S', 3: 'S' };
     let bag = [];
+    let wishlist = [];
     let user = null;
+    let currentLang = 'en';
+    let currentRating = 5;
 
     window.addEventListener('DOMContentLoaded', () => {
       const stored = localStorage.getItem('theAurenMember');
       if (stored) {
         user = JSON.parse(stored);
         document.getElementById('signupModal').style.display = 'none';
-        document.getElementById('userTag').innerText = user.name.split(' ')[0].toUpperCase();
+        updateDashboardUser();
+      }
+
+      const storedWish = localStorage.getItem('theAurenWishlist');
+      if (storedWish) {
+        wishlist = JSON.parse(storedWish);
+        renderWishlistUI();
       }
     });
+
+    function toggleDrawer(open) {
+      document.getElementById('accountDrawer').classList.toggle('active', open);
+      document.getElementById('drawerOverlay').classList.toggle('active', open);
+    }
+
+    function openModal(id) {
+      document.getElementById(id).style.display = 'flex';
+      toggleDrawer(false);
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = 'none';
+    }
+
+    function updateDashboardUser() {
+      if (!user) return;
+      document.getElementById('dashUserName').innerText = user.name.toUpperCase();
+      document.getElementById('dashUserContact').innerText = user.phone + " | " + user.email;
+      
+      document.getElementById('editName').value = user.name;
+      document.getElementById('editEmail').value = user.email;
+      document.getElementById('editPhone').value = user.phone;
+      document.getElementById('editAddress').value = user.address;
+    }
 
     function saveUserAccess(e) {
       e.preventDefault();
@@ -363,7 +637,21 @@
       };
       localStorage.setItem('theAurenMember', JSON.stringify(user));
       document.getElementById('signupModal').style.display = 'none';
-      document.getElementById('userTag').innerText = user.name.split(' ')[0].toUpperCase();
+      updateDashboardUser();
+    }
+
+    function updateProfileData(e) {
+      e.preventDefault();
+      user = {
+        name: document.getElementById('editName').value.trim(),
+        email: document.getElementById('editEmail').value.trim(),
+        phone: document.getElementById('editPhone').value.trim(),
+        address: document.getElementById('editAddress').value.trim()
+      };
+      localStorage.setItem('theAurenMember', JSON.stringify(user));
+      updateDashboardUser();
+      closeModal('profileEditModal');
+      alert("Profile and address updated successfully.");
     }
 
     function pickSize(pId, sizeVal) {
@@ -402,7 +690,7 @@
                + "*Phone:* " + user.phone + "\n"
                + "*Email:* " + user.email + "\n"
                + "*Shipping Address:* " + user.address;
-      window.open("https://wa.me/918447311105?text=" + encodeURIComponent(text), "_blank");
+      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
     }
 
     function checkoutBag() {
@@ -417,12 +705,99 @@
                + "*Phone:* " + user.phone + "\n"
                + "*Email:* " + user.email + "\n"
                + "*Shipping Address:* " + user.address;
-      window.open("https://wa.me/918447311105?text=" + encodeURIComponent(text), "_blank");
+      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
     }
 
-    function closeSizeChart(e) {
-      if (e.target.id === 'sizeModal') {
-        document.getElementById('sizeModal').style.display = 'none';
+    /* Wishlist Operations */
+    function toggleWishlist(pId, title, price) {
+      let idx = wishlist.findIndex(w => w.id === pId);
+      let btn = document.getElementById('wbtn-' + pId);
+      if (idx > -1) {
+        wishlist.splice(idx, 1);
+        btn.classList.remove('active');
+      } else {
+        wishlist.push({ id: pId, title: title, price: price });
+        btn.classList.add('active');
+      }
+      localStorage.setItem('theAurenWishlist', JSON.stringify(wishlist));
+      renderWishlistUI();
+    }
+
+    function renderWishlistUI() {
+      document.getElementById('wishCount').innerText = wishlist.length;
+      let container = document.getElementById('wishlistContent');
+      if (wishlist.length === 0) {
+        container.innerHTML = "<p style='color:#888;'>No items wishlisted yet.</p>";
+        return;
+      }
+      container.innerHTML = wishlist.map(i => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #222;">
+          <div><strong>${i.title}</strong><br><span style="color:#aaa;">₹${i.price}</span></div>
+          <button class="btn-outline" style="padding:6px 12px;" onclick="addToBag('${i.title}', ${i.price}, ${i.id}); closeModal('wishlistModal');">Move to Bag</button>
+        </div>
+      `).join('');
+    }
+
+    /* Rating Module */
+    function rateStar(stars) {
+      currentRating = stars;
+      let btns = document.querySelectorAll('.star-btn');
+      btns.forEach((b, i) => {
+        b.classList.toggle('active', i < stars);
+      });
+    }
+
+    function submitRating() {
+      let note = document.getElementById('rateFeedback').value;
+      alert("Thank you for rating us " + currentRating + " Stars!");
+      closeModal('ratingModal');
+    }
+
+    /* Direct Concierge WhatsApp Links */
+    function directRefundSupport() {
+      if (!user) return;
+      let text = "Hi THE AUREN Support, I need assistance with Exchange/Refund for an order.\n\nName: " + user.name + "\nPhone: " + user.phone;
+      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
+    }
+
+    function openHelpSupport() {
+      let text = "Hi THE AUREN Support, I need help with my account/inquiry.";
+      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
+    }
+
+    /* Language Switcher */
+    function toggleLanguage() {
+      if (currentLang === 'en') {
+        currentLang = 'hi';
+        document.getElementById('txt-announcement').innerText = "अखिल भारतीय एक्सप्रेस डिलीवरी | सीमित संस्करण";
+        document.getElementById('txt-nav-guide').innerText = "साइज़ गाइड";
+        document.getElementById('txt-nav-about').innerText = "हमारे बारे में";
+        document.getElementById('txt-dash-title').innerText = "खाता केंद्र";
+        document.getElementById('txt-menu-profile').innerText = "प्रोफ़ाइल और पता";
+        document.getElementById('txt-menu-pay').innerText = "भुगतान और UPI विकल्प";
+        document.getElementById('txt-menu-refund').innerText = "रिफंड / एक्सचेंज सहायता";
+        document.getElementById('txt-menu-rate').innerText = "रेटिंग दें";
+        document.getElementById('txt-menu-legal').innerText = "नियम और नीतियां";
+        document.getElementById('txt-menu-help').innerText = "सहायता केंद्र";
+      } else {
+        currentLang = 'en';
+        document.getElementById('txt-announcement').innerText = "Pan-India Express Dispatch | Limited Production Run";
+        document.getElementById('txt-nav-guide').innerText = "Size Guide";
+        document.getElementById('txt-nav-about').innerText = "About";
+        document.getElementById('txt-dash-title').innerText = "Account Center";
+        document.getElementById('txt-menu-profile').innerText = "Profile & Saved Address";
+        document.getElementById('txt-menu-pay').innerText = "Payment & UPI Options";
+        document.getElementById('txt-menu-refund').innerText = "Request Refund / Exchange";
+        document.getElementById('txt-menu-rate').innerText = "Rate Experience";
+        document.getElementById('txt-menu-legal').innerText = "Legal & Policies";
+        document.getElementById('txt-menu-help').innerText = "Help Center (WhatsApp)";
+      }
+    }
+
+    function resetUserSession() {
+      if (confirm("Are you sure you want to log out and clear saved data?")) {
+        localStorage.clear();
+        location.reload();
       }
     }
   </script>
