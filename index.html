@@ -162,7 +162,7 @@
     .drawer-user-info { padding: 16px 0; border-bottom: 1px solid var(--surface-border); }
     .user-greeting { font-size: 14px; font-weight: 600; letter-spacing: 1px; }
     .user-contact { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-    .drawer-menu { list-style: none; margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
+    .drawer-menu { list-style: margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
     .drawer-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #000; border: 1px solid var(--surface-border); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
 
     /* Products Area */
@@ -223,20 +223,28 @@
     .trust-badges-row { display: flex; gap: 20px; border-top: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border); padding: 15px 0; margin-bottom: 24px; }
     .badge-card { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #ccc; }
 
-    .reviews-box { margin-top: 10px; }
-    .reviews-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-    .rating-pill { background: #161616; border: 1px solid #333; padding: 4px 8px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
-    .review-card { background: #080808; border: 1px solid var(--surface-border); padding: 12px; margin-bottom: 8px; }
-    .review-user { font-size: 10px; font-weight: 600; color: #aaa; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
-
+    /* Floating Cart Bar */
     .cart-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(12px); border: 1px solid #333; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 900; }
     .cart-summary { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
 
-    .gen-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 9998; padding: 20px; }
-    .gen-modal-box { background: var(--surface); border: 1px solid var(--surface-border); padding: 30px 24px; max-width: 480px; width: 100%; text-align: left; max-height: 85vh; overflow-y: auto; }
-    .gen-modal-box h3 { font-size: 13px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; text-align: center; }
+    /* Modals & Checkout UI */
+    .gen-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 9998; padding: 20px; }
+    .gen-modal-box { background: var(--surface); border: 1px solid var(--surface-border); padding: 30px 24px; max-width: 480px; width: 100%; text-align: left; max-height: 88vh; overflow-y: auto; }
+    .gen-modal-box h3 { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; text-align: center; }
 
-    /* Admin Manager Table */
+    /* Payment Gateway Selection Styles */
+    .pay-option-card { background: #080808; border: 1px solid var(--surface-border); padding: 14px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s; }
+    .pay-option-card.selected { border-color: var(--white); background: #121212; }
+    .pay-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .pay-sub { font-size: 9px; color: var(--text-muted); }
+
+    .qr-container { text-align: center; background: #000; border: 1px solid var(--surface-border); padding: 20px; margin: 15px 0; }
+    .qr-box { width: 140px; height: 140px; margin: 0 auto 10px; background: #fff; padding: 8px; display: flex; align-items: center; justify-content: center; }
+    .qr-box img { width: 100%; height: 100%; object-fit: contain; }
+
+    .summary-row { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; color: #bbb; }
+    .summary-row.total { border-top: 1px solid var(--surface-border); margin-top: 8px; padding-top: 10px; color: #fff; font-weight: 700; font-size: 13px; }
+
     .admin-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--surface-border); font-size: 11px; }
     .admin-input { width: 60px; background: #000; border: 1px solid #333; color: #fff; padding: 5px; font-size: 11px; text-align: center; }
 
@@ -245,7 +253,7 @@
 </head>
 <body>
 
-  <!-- Mandatory Initial Access Form -->
+  <!-- Mandatory Access Gate -->
   <div id="signupModal" class="modal-overlay">
     <div class="modal-box">
       <h2>THE AUREN</h2>
@@ -253,18 +261,18 @@
       <form id="signupForm" onsubmit="saveUserAccess(event)">
         <input type="text" id="cName" class="input-field" placeholder="FULL NAME" required />
         <input type="email" id="cEmail" class="input-field" placeholder="EMAIL ADDRESS" required />
-        <input type="tel" id="cPhone" class="input-field" placeholder="WHATSAPP NUMBER" required />
+        <input type="tel" id="cPhone" class="input-field" placeholder="CONTACT NUMBER" required />
         <textarea id="cAddress" class="input-field" placeholder="COMPLETE DELIVERY ADDRESS (HOUSE NO, STREET, CITY, PINCODE)" required></textarea>
         <button type="submit" class="btn-solid">Enter Store</button>
       </form>
     </div>
   </div>
 
-  <div class="top-strip" id="txt-announcement">Pan-India Express Dispatch | Limited Production Run</div>
+  <div class="top-strip">Pan-India Express Dispatch | Limited Production Run</div>
 
   <header>
     <nav class="navbar">
-      <!-- Triple Tap on THE AUREN opens Secret Admin Inventory -->
+      <!-- 3 Taps on THE AUREN opens Owner Dashboard & Orders -->
       <a href="javascript:void(0)" class="brand-logo" onclick="handleLogoClick()">THE AUREN</a>
       <div class="nav-actions">
         <button class="nav-link-btn" onclick="openModal('sizeGuideModal')">Size Guide</button>
@@ -280,7 +288,7 @@
   <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer(false)"></div>
   <aside id="accountDrawer" class="drawer">
     <div class="drawer-header">
-      <h3 id="txt-dash-title">Account Center</h3>
+      <h3>Account Center</h3>
       <button class="close-btn" onclick="toggleDrawer(false)">✕</button>
     </div>
 
@@ -291,12 +299,9 @@
 
     <ul class="drawer-menu">
       <li class="drawer-item" onclick="openModal('profileEditModal')"><span>Profile & Saved Address</span> <span>→</span></li>
+      <li class="drawer-item" onclick="openModal('ordersModal')"><span>My Placed Orders (<span id="userOrderCount">0</span>)</span> <span>→</span></li>
       <li class="drawer-item" onclick="openModal('wishlistModal')"><span>My Wishlist (<span id="wishCount">0</span>)</span> <span>→</span></li>
-      <li class="drawer-item" onclick="openModal('paymentModal')"><span>Payment & UPI Options</span> <span>→</span></li>
-      <li class="drawer-item" onclick="directRefundSupport()"><span>Request Refund / Exchange</span> <span>→</span></li>
-      <li class="drawer-item" onclick="openModal('ratingModal')"><span>Rate Experience</span> <span>★</span></li>
       <li class="drawer-item" onclick="openModal('policyModal')"><span>Legal & Policies</span> <span>→</span></li>
-      <li class="drawer-item" onclick="openHelpSupport()"><span>Help Center (WhatsApp)</span> <span>→</span></li>
       <li class="drawer-item" onclick="resetUserSession()" style="border-color: #331111; color: var(--danger);"><span>Reset Session / Logout</span> <span>✕</span></li>
     </ul>
   </aside>
@@ -331,8 +336,8 @@
           </div>
 
           <div class="coupon-box">
-            <div class="coupon-info">Get at ₹1,299 with Instant WhatsApp Prepaid</div>
-            <div class="coupon-badge">EXTRA ₹200 OFF</div>
+            <div class="coupon-info">Instant Checkout Discount Applied</div>
+            <div class="coupon-badge">PREPAID DEAL</div>
           </div>
 
           <div class="size-header">
@@ -342,7 +347,7 @@
           <div class="sizes-grid" id="sizes-1"></div>
 
           <div class="actions-grid">
-            <button class="btn-buy-full" onclick="orderNow('Structured Boxy Hoodie', 1499, 1)">Buy Now</button>
+            <button class="btn-buy-full" onclick="startDirectCheckout('Structured Boxy Hoodie', 1499, 1)">Place Order</button>
             <button class="btn-cart-full" onclick="addToBag('Structured Boxy Hoodie', 1499, 1)">Add to Bag</button>
           </div>
 
@@ -353,8 +358,7 @@
               <span class="change-btn" onclick="openModal('profileEditModal')">Change</span>
             </div>
             <div class="service-row"><span class="service-icon">✓</span><span>Express Delivery in 2-3 Business Days</span></div>
-            <div class="service-row"><span class="service-icon">✓</span><span>Pay on Delivery / UPI Available</span></div>
-            <div class="service-row"><span class="service-icon">✓</span><span>Hassle-free 7 Days Return & Size Exchange</span></div>
+            <div class="service-row"><span class="service-icon">✓</span><span>Direct Secure Online Payment & COD</span></div>
           </div>
 
           <div class="specs-box">
@@ -362,7 +366,6 @@
             <ul class="specs-list">
               <li>Heavyweight 420 GSM French Terry Cotton</li>
               <li>Signature boxy drop-shoulder aesthetic</li>
-              <li>Pre-shrunk, bio-washed matte black finish</li>
             </ul>
           </div>
         </div>
@@ -396,7 +399,7 @@
           <div class="sizes-grid" id="sizes-2"></div>
 
           <div class="actions-grid">
-            <button class="btn-buy-full" onclick="orderNow('Minimalist Suede Jacket', 2999, 2)">Buy Now</button>
+            <button class="btn-buy-full" onclick="startDirectCheckout('Minimalist Suede Jacket', 2999, 2)">Place Order</button>
             <button class="btn-cart-full" onclick="addToBag('Minimalist Suede Jacket', 2999, 2)">Add to Bag</button>
           </div>
 
@@ -417,25 +420,131 @@
   <!-- Floating Bag Bar -->
   <div id="cartBar" class="cart-bar" style="display: none;">
     <div class="cart-summary" id="cartLabel">0 Items | ₹0</div>
-    <button class="btn-solid" style="width:auto; padding: 8px 16px;" onclick="checkoutBag()">Checkout via WhatsApp</button>
+    <button class="btn-solid" style="width:auto; padding: 8px 16px;" onclick="startBagCheckout()">Checkout Order</button>
   </div>
 
-  <!-- SECRET OWNER INVENTORY MODAL -->
-  <div id="adminModal" class="gen-modal">
+  <!-- NATIVE WEBSITE CHECKOUT & PAYMENT MODAL -->
+  <div id="checkoutModal" class="gen-modal">
     <div class="gen-modal-box">
-      <h3>Store Inventory Control</h3>
-      <p style="font-size: 10px; color: var(--text-muted); text-align: center; margin-bottom: 15px;">Change stock count (0 = Sold Out). Saved automatically.</p>
-      
-      <div id="adminStockList"></div>
+      <h3>Checkout & Payment</h3>
 
-      <div class="actions-grid" style="margin-top: 15px;">
-        <button class="btn-solid" onclick="saveAdminStock()">Save & Apply</button>
-        <button class="btn-cart-full" onclick="closeModal('adminModal')">Close</button>
+      <div style="background:#080808; padding:12px; border:1px solid var(--surface-border); margin-bottom:15px;">
+        <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">Delivering To:</div>
+        <div style="font-size:11px; font-weight:600; color:#fff;" id="checkoutCustomerName">Customer</div>
+        <div style="font-size:10px; color:#aaa; margin-top:2px;" id="checkoutCustomerAddress">Address details</div>
       </div>
+
+      <div style="background:#000; padding:12px; border:1px solid var(--surface-border); margin-bottom:15px;">
+        <div class="summary-row"><span>Item(s) Subtotal:</span><span id="coSubtotal">₹0</span></div>
+        <div class="summary-row"><span>Shipping Charges:</span><span style="color:var(--success);">FREE</span></div>
+        <div class="summary-row total"><span>Total Payable:</span><span id="coTotal">₹0</span></div>
+      </div>
+
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Select Payment Method</div>
+
+      <div class="pay-option-card selected" id="opt-upi" onclick="selectPayOption('UPI')">
+        <div>
+          <div class="pay-title">Instant UPI / QR Code</div>
+          <div class="pay-sub">GPay, PhonePe, Paytm, BHIM</div>
+        </div>
+        <span style="font-size:14px;">⚡</span>
+      </div>
+
+      <div class="pay-option-card" id="opt-card" onclick="selectPayOption('CARD')">
+        <div>
+          <div class="pay-title">Debit / Credit Card</div>
+          <div class="pay-sub">Visa, Mastercard, Rupay</div>
+        </div>
+        <span style="font-size:14px;">💳</span>
+      </div>
+
+      <div class="pay-option-card" id="opt-cod" onclick="selectPayOption('COD')">
+        <div>
+          <div class="pay-title">Cash on Delivery (COD)</div>
+          <div class="pay-sub">Pay at door during delivery</div>
+        </div>
+        <span style="font-size:14px;">📦</span>
+      </div>
+
+      <!-- Live Dynamic Payment Content Container -->
+      <div id="paymentContentArea">
+        <div class="qr-container">
+          <div class="qr-box">
+            <!-- Linked to 8447311105@ptaxis -->
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=8447311105@ptaxis%26pn=THE%20AUREN%26cu=INR" alt="Scan QR to Pay">
+          </div>
+          <p style="font-size:10px; color:#aaa; text-transform:uppercase;">Scan with any UPI App or use UPI ID:</p>
+          <div style="background:#111; padding:6px; font-size:11px; font-weight:700; color:#fff; border:1px solid #333; margin-top:4px;">8447311105@ptaxis</div>
+        </div>
+      </div>
+
+      <button class="btn-solid" style="margin-top:10px;" onclick="confirmAndPlaceOrder()">Complete Order</button>
+      <button class="btn-cart-full" style="margin-top:8px; width:100%; border:none; color:#888;" onclick="closeModal('checkoutModal')">Cancel</button>
     </div>
   </div>
 
-  <!-- Regular Modals (Profile, Wishlist, Payment, Size Guide) -->
+  <!-- ORDER SUCCESS / INVOICE SCREEN -->
+  <div id="orderSuccessModal" class="gen-modal">
+    <div class="gen-modal-box" style="text-align: center;">
+      <div style="font-size:36px; color:var(--success); margin-bottom:10px;">✓</div>
+      <h3>Order Placed Successfully!</h3>
+      <p style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Thank you for shopping with THE AUREN.</p>
+
+      <div style="background:#080808; border:1px solid var(--surface-border); padding:15px; text-align:left; margin-bottom:15px; font-size:11px;">
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span>Order ID:</span>
+          <strong id="successOrderId" style="color:#fff;">#AUR-9281</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span>Payment Status:</span>
+          <strong id="successPayMethod" style="color:var(--success);">CONFIRMED</strong>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <span>Delivery Date:</span>
+          <strong id="successDeliveryDate">3 Business Days</strong>
+        </div>
+        <div style="border-top:1px solid #222; margin-top:8px; padding-top:8px;">
+          <span>Items Ordered:</span>
+          <div id="successItemList" style="color:#aaa; margin-top:4px;"></div>
+        </div>
+      </div>
+
+      <button class="btn-solid" onclick="closeOrderSuccess()">Continue Exploring</button>
+    </div>
+  </div>
+
+  <!-- MY PLACED ORDERS MODAL -->
+  <div id="ordersModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>My Orders</h3>
+      <div id="userOrdersList" style="margin: 15px 0;">No active orders found.</div>
+      <button class="btn-solid" onclick="closeModal('ordersModal')">Close</button>
+    </div>
+  </div>
+
+  <!-- OWNER INVENTORY & ORDERS ADMIN MODAL (3 TAPS) -->
+  <div id="adminModal" class="gen-modal">
+    <div class="gen-modal-box">
+      <h3>Store Control & Live Orders</h3>
+      <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <button class="btn-solid" style="padding:6px; font-size:10px;" onclick="showAdminTab('stock')">Inventory</button>
+        <button class="btn-solid" style="padding:6px; font-size:10px;" onclick="showAdminTab('orders')">Customer Orders</button>
+      </div>
+
+      <div id="adminStockTab">
+        <div id="adminStockList"></div>
+        <button class="btn-solid" style="margin-top:10px;" onclick="saveAdminStock()">Save Stock</button>
+      </div>
+
+      <div id="adminOrdersTab" style="display:none;">
+        <div id="adminOrdersList"></div>
+      </div>
+
+      <button class="btn-cart-full" style="width:100%; margin-top:12px;" onclick="closeModal('adminModal')">Close</button>
+    </div>
+  </div>
+
+  <!-- Other Profile & Info Modals -->
   <div id="profileEditModal" class="gen-modal">
     <div class="gen-modal-box">
       <h3>Profile & Shipping Address</h3>
@@ -455,21 +564,8 @@
   <div id="wishlistModal" class="gen-modal">
     <div class="gen-modal-box">
       <h3>My Wishlist</h3>
-      <div id="wishlistContent" style="margin: 15px 0;">No items wishlisted yet.</div>
+      <div id="wishlistContent" style="margin: 15px 0;">No items wishlisted.</div>
       <button class="btn-solid" onclick="closeModal('wishlistModal')">Close</button>
-    </div>
-  </div>
-
-  <div id="paymentModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>Payment & Settlements</h3>
-      <p>Direct WhatsApp checkout supports 100% verified encrypted payment methods:</p>
-      <div style="background: #000; padding: 14px; border: 1px solid var(--surface-border); margin: 15px 0;">
-        <p style="margin: 0; color: #fff; font-weight: 600;">✓ UPI / QR (Google Pay, PhonePe, Paytm)</p>
-        <p style="margin: 6px 0 0; color: #fff; font-weight: 600;">✓ Direct IMPS / NEFT Bank Transfer</p>
-        <p style="margin: 6px 0 0; color: #fff; font-weight: 600;">✓ COD available on select PIN codes</p>
-      </div>
-      <button class="btn-solid" onclick="closeModal('paymentModal')">Understood</button>
     </div>
   </div>
 
@@ -497,32 +593,26 @@
     </div>
   </div>
 
-  <div id="ratingModal" class="gen-modal">
-    <div class="gen-modal-box" style="text-align: center;">
-      <h3>Rate THE AUREN</h3>
-      <p>★★★★★</p>
-      <button class="btn-solid" onclick="closeModal('ratingModal')">Submit Rating</button>
-    </div>
-  </div>
-
   <footer>
     <p>© 2026 THE AUREN. All rights reserved.</p>
   </footer>
 
   <script>
-    const WA_NUMBER = "918447311105";
+    const STORE_UPI_ID = "8447311105@ptaxis";
     
-    // Default Initial Stock Configuration
     let defaultInventory = {
       1: { 'S': 3, 'M': 5, 'L': 2, 'XL': 0 },
       2: { 'S': 2, 'M': 4, 'L': 1, 'XL': 2 }
     };
 
     let inventory = JSON.parse(localStorage.getItem('theAurenInventory')) || defaultInventory;
+    let placedOrders = JSON.parse(localStorage.getItem('theAurenOrders')) || [];
     let selectedSizes = { 1: 'S', 2: 'S' };
     let bag = [];
     let wishlist = [];
     let user = null;
+    let activeCheckoutItems = [];
+    let currentPaymentMethod = 'UPI';
     let logoClicks = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -533,9 +623,9 @@
         updateDashboardUser();
       }
       renderAllSizeSelectors();
+      updateUserOrdersUI();
     });
 
-    // Secret Admin Logo Trigger (3 Taps)
     function handleLogoClick() {
       logoClicks++;
       if (logoClicks >= 3) {
@@ -560,7 +650,30 @@
         }
       }
       container.innerHTML = html;
+      renderAdminOrders();
       openModal('adminModal');
+    }
+
+    function showAdminTab(tab) {
+      document.getElementById('adminStockTab').style.display = tab === 'stock' ? 'block' : 'none';
+      document.getElementById('adminOrdersTab').style.display = tab === 'orders' ? 'block' : 'none';
+    }
+
+    function renderAdminOrders() {
+      let container = document.getElementById('adminOrdersList');
+      if (placedOrders.length === 0) {
+        container.innerHTML = "<p style='color:#888; font-size:11px;'>No orders received yet.</p>";
+        return;
+      }
+      container.innerHTML = placedOrders.map(o => `
+        <div style="background:#000; border:1px solid #222; padding:10px; margin-bottom:8px; font-size:10px;">
+          <div><strong style="color:#fff;">${o.id}</strong> | ${o.date}</div>
+          <div style="color:#aaa;">Customer: ${o.customer.name} (${o.customer.phone})</div>
+          <div style="color:#aaa;">Address: ${o.customer.address}</div>
+          <div style="color:#fff; margin-top:4px;">Items: ${o.items.map(i => i.title + ' [' + i.size + ']').join(', ')}</div>
+          <div style="color:var(--success); font-weight:700; margin-top:2px;">Total: ₹${o.total} (${o.payment})</div>
+        </div>
+      `).join('');
     }
 
     function saveAdminStock() {
@@ -576,7 +689,6 @@
       alert("Inventory updated successfully!");
     }
 
-    // Render Size Selectors with Real-time Stock Tags
     function renderAllSizeSelectors() {
       for (let pId in inventory) {
         let grid = document.getElementById('sizes-' + pId);
@@ -659,7 +771,7 @@
     }
 
     function addToBag(title, price, pId) {
-      bag.push({ title: title, price: price, size: selectedSizes[pId] });
+      bag.push({ title: title, price: price, size: selectedSizes[pId], pId: pId });
       updateBagUI();
     }
 
@@ -673,31 +785,124 @@
       }
     }
 
-    function orderNow(title, price, pId) {
+    /* DIRECT CHECKOUT LOGIC */
+    function startDirectCheckout(title, price, pId) {
       if (!user) return;
-      let s = selectedSizes[pId];
-      let text = "Hi THE AUREN, I want to place an order:\n\n"
-               + "*Product:* " + title + " [Size: " + s + "]\n"
-               + "*Price:* ₹" + price + "\n\n"
-               + "*--- Customer Delivery Info ---*\n"
-               + "*Name:* " + user.name + "\n"
-               + "*Phone:* " + user.phone + "\n"
-               + "*Address:* " + user.address;
-      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
+      activeCheckoutItems = [{ title: title, price: price, size: selectedSizes[pId], pId: pId }];
+      openCheckoutModal();
     }
 
-    function checkoutBag() {
+    function startBagCheckout() {
       if (bag.length === 0 || !user) return;
-      let total = bag.reduce((sum, item) => sum + item.price, 0);
-      let list = bag.map(i => i.title + " (Size: " + i.size + ") - ₹" + i.price).join("\n");
-      let text = "Hi THE AUREN, I want to checkout my bag:\n\n"
-               + "*Items:*\n" + list + "\n\n"
-               + "*Total:* ₹" + total + "\n\n"
-               + "*--- Shipping Info ---*\n"
-               + "*Name:* " + user.name + "\n"
-               + "*Phone:* " + user.phone + "\n"
-               + "*Address:* " + user.address;
-      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
+      activeCheckoutItems = [...bag];
+      openCheckoutModal();
+    }
+
+    function openCheckoutModal() {
+      document.getElementById('checkoutCustomerName').innerText = user.name + " (" + user.phone + ")";
+      document.getElementById('checkoutCustomerAddress').innerText = user.address;
+
+      let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
+      document.getElementById('coSubtotal').innerText = "₹" + total;
+      document.getElementById('coTotal').innerText = "₹" + total;
+
+      selectPayOption('UPI');
+      openModal('checkoutModal');
+    }
+
+    function selectPayOption(method) {
+      currentPaymentMethod = method;
+      document.getElementById('opt-upi').classList.toggle('selected', method === 'UPI');
+      document.getElementById('opt-card').classList.toggle('selected', method === 'CARD');
+      document.getElementById('opt-cod').classList.toggle('selected', method === 'COD');
+
+      let area = document.getElementById('paymentContentArea');
+      if (method === 'UPI') {
+        area.innerHTML = `
+          <div class="qr-container">
+            <div class="qr-box">
+              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=${STORE_UPI_ID}%26pn=THE%20AUREN%26cu=INR" alt="UPI QR">
+            </div>
+            <p style="font-size:10px; color:#aaa;">Scan using GPay, PhonePe, Paytm or use UPI ID:</p>
+            <div style="background:#111; padding:6px; font-size:11px; font-weight:700; color:#fff; border:1px solid #333; margin-top:4px;">${STORE_UPI_ID}</div>
+          </div>
+        `;
+      } else if (method === 'CARD') {
+        area.innerHTML = `
+          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0;">
+            <input type="text" class="input-field" placeholder="CARD NUMBER (16 DIGITS)" maxlength="16">
+            <div style="display:flex; gap:8px;">
+              <input type="text" class="input-field" placeholder="MM/YY" maxlength="5">
+              <input type="password" class="input-field" placeholder="CVV" maxlength="3">
+            </div>
+          </div>
+        `;
+      } else if (method === 'COD') {
+        area.innerHTML = `
+          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa;">
+            📦 Cash on Delivery confirmed. Please keep exact cash ready during delivery.
+          </div>
+        `;
+      }
+    }
+
+    function confirmAndPlaceOrder() {
+      let orderId = "#AUR-" + Math.floor(1000 + Math.random() * 9000);
+      let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
+
+      activeCheckoutItems.forEach(item => {
+        if (inventory[item.pId] && inventory[item.pId][item.size] > 0) {
+          inventory[item.pId][item.size]--;
+        }
+      });
+      localStorage.setItem('theAurenInventory', JSON.stringify(inventory));
+      renderAllSizeSelectors();
+
+      let newOrder = {
+        id: orderId,
+        date: new Date().toLocaleDateString('en-GB'),
+        total: total,
+        payment: currentPaymentMethod,
+        customer: { ...user },
+        items: [...activeCheckoutItems]
+      };
+      placedOrders.unshift(newOrder);
+      localStorage.setItem('theAurenOrders', JSON.stringify(placedOrders));
+
+      bag = [];
+      document.getElementById('cartBar').style.display = 'none';
+
+      document.getElementById('successOrderId').innerText = orderId;
+      document.getElementById('successPayMethod').innerText = currentPaymentMethod + " (VERIFIED)";
+      document.getElementById('successItemList').innerHTML = activeCheckoutItems.map(i => `• ${i.title} (${i.size}) - ₹${i.price}`).join('<br>');
+
+      closeModal('checkoutModal');
+      openModal('orderSuccessModal');
+      updateUserOrdersUI();
+    }
+
+    function closeOrderSuccess() {
+      closeModal('orderSuccessModal');
+    }
+
+    function updateUserOrdersUI() {
+      document.getElementById('userOrderCount').innerText = placedOrders.length;
+      let container = document.getElementById('userOrdersList');
+      if (placedOrders.length === 0) {
+        container.innerHTML = "<p style='color:#888; font-size:11px;'>No orders placed yet.</p>";
+        return;
+      }
+      container.innerHTML = placedOrders.map(o => `
+        <div style="background:#080808; border:1px solid #222; padding:12px; margin-bottom:10px; font-size:11px;">
+          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+            <strong style="color:#fff;">${o.id}</strong>
+            <span style="color:var(--success);">${o.payment}</span>
+          </div>
+          <div style="color:#aaa;">Placed on: ${o.date}</div>
+          <div style="color:#ddd; margin-top:4px;">${o.items.map(i => i.title + ' (' + i.size + ')').join(', ')}</div>
+          <div style="font-weight:700; color:#fff; margin-top:4px;">Total: ₹${o.total}</div>
+        </div>
+      `).join('');
     }
 
     function toggleWishlist(pId, title, price) {
@@ -712,16 +917,6 @@
       }
       localStorage.setItem('theAurenWishlist', JSON.stringify(wishlist));
       document.getElementById('wishCount').innerText = wishlist.length;
-    }
-
-    function directRefundSupport() {
-      if (!user) return;
-      let text = "Hi THE AUREN Support, I need help with return/refund for an order.\n\nName: " + user.name;
-      window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text), "_blank");
-    }
-
-    function openHelpSupport() {
-      window.open("https://wa.me/" + WA_NUMBER + "?text=Hi%20THE%20AUREN%20Support,%20I%20need%20help.", "_blank");
     }
 
     function resetUserSession() {
