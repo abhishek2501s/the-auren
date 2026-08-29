@@ -8,6 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Official Razorpay Checkout Script -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   
   <style>
     :root {
@@ -162,7 +164,7 @@
     .drawer-user-info { padding: 16px 0; border-bottom: 1px solid var(--surface-border); }
     .user-greeting { font-size: 14px; font-weight: 600; letter-spacing: 1px; }
     .user-contact { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-    .drawer-menu { list-style: margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
+    .drawer-menu { list-style: none; margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
     .drawer-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #000; border: 1px solid var(--surface-border); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
 
     /* Products Area */
@@ -232,15 +234,11 @@
     .gen-modal-box { background: var(--surface); border: 1px solid var(--surface-border); padding: 30px 24px; max-width: 480px; width: 100%; text-align: left; max-height: 88vh; overflow-y: auto; }
     .gen-modal-box h3 { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; text-align: center; }
 
-    /* Payment Gateway Selection Styles */
+    /* Payment Option Card Styles */
     .pay-option-card { background: #080808; border: 1px solid var(--surface-border); padding: 14px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s; }
     .pay-option-card.selected { border-color: var(--white); background: #121212; }
     .pay-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
     .pay-sub { font-size: 9px; color: var(--text-muted); }
-
-    .qr-container { text-align: center; background: #000; border: 1px solid var(--surface-border); padding: 20px; margin: 15px 0; }
-    .qr-box { width: 140px; height: 140px; margin: 0 auto 10px; background: #fff; padding: 8px; display: flex; align-items: center; justify-content: center; }
-    .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 
     .summary-row { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; color: #bbb; }
     .summary-row.total { border-top: 1px solid var(--surface-border); margin-top: 8px; padding-top: 10px; color: #fff; font-weight: 700; font-size: 13px; }
@@ -261,7 +259,7 @@
       <form id="signupForm" onsubmit="saveUserAccess(event)">
         <input type="text" id="cName" class="input-field" placeholder="FULL NAME" required />
         <input type="email" id="cEmail" class="input-field" placeholder="EMAIL ADDRESS" required />
-        <input type="tel" id="cPhone" class="input-field" placeholder="CONTACT NUMBER" required />
+        <input type="tel" id="cPhone" class="input-field" placeholder="CONTACT NUMBER (10 DIGITS)" maxlength="10" required />
         <textarea id="cAddress" class="input-field" placeholder="COMPLETE DELIVERY ADDRESS (HOUSE NO, STREET, CITY, PINCODE)" required></textarea>
         <button type="submit" class="btn-solid">Enter Store</button>
       </form>
@@ -358,7 +356,7 @@
               <span class="change-btn" onclick="openModal('profileEditModal')">Change</span>
             </div>
             <div class="service-row"><span class="service-icon">✓</span><span>Express Delivery in 2-3 Business Days</span></div>
-            <div class="service-row"><span class="service-icon">✓</span><span>Direct Secure Online Payment & COD</span></div>
+            <div class="service-row"><span class="service-icon">✓</span><span>Official Razorpay Payment Gateway & COD</span></div>
           </div>
 
           <div class="specs-box">
@@ -440,22 +438,14 @@
         <div class="summary-row total"><span>Total Payable:</span><span id="coTotal">₹0</span></div>
       </div>
 
-      <div style="font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Select Payment Method</div>
+      <div style="font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Select Payment Option</div>
 
-      <div class="pay-option-card selected" id="opt-upi" onclick="selectPayOption('UPI')">
+      <div class="pay-option-card selected" id="opt-online" onclick="selectPayOption('ONLINE')">
         <div>
-          <div class="pay-title">Instant UPI / QR Code</div>
-          <div class="pay-sub">GPay, PhonePe, Paytm, BHIM</div>
+          <div class="pay-title">Instant Online Payment (Razorpay)</div>
+          <div class="pay-sub">UPI (GPay/PhonePe/Paytm), Cards, Netbanking</div>
         </div>
         <span style="font-size:14px;">⚡</span>
-      </div>
-
-      <div class="pay-option-card" id="opt-card" onclick="selectPayOption('CARD')">
-        <div>
-          <div class="pay-title">Debit / Credit Card</div>
-          <div class="pay-sub">Visa, Mastercard, Rupay</div>
-        </div>
-        <span style="font-size:14px;">💳</span>
       </div>
 
       <div class="pay-option-card" id="opt-cod" onclick="selectPayOption('COD')">
@@ -466,19 +456,13 @@
         <span style="font-size:14px;">📦</span>
       </div>
 
-      <!-- Live Dynamic Payment Content Container -->
       <div id="paymentContentArea">
-        <div class="qr-container">
-          <div class="qr-box">
-            <!-- Linked to 8447311105@ptaxis -->
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=8447311105@ptaxis%26pn=THE%20AUREN%26cu=INR" alt="Scan QR to Pay">
-          </div>
-          <p style="font-size:10px; color:#aaa; text-transform:uppercase;">Scan with any UPI App or use UPI ID:</p>
-          <div style="background:#111; padding:6px; font-size:11px; font-weight:700; color:#fff; border:1px solid #333; margin-top:4px;">8447311105@ptaxis</div>
+        <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa; text-align:center;">
+          🔒 Secured by Razorpay. Click button below to complete verified payment.
         </div>
       </div>
 
-      <button class="btn-solid" style="margin-top:10px;" onclick="confirmAndPlaceOrder()">Complete Order</button>
+      <button class="btn-solid" id="checkoutSubmitBtn" style="margin-top:10px;" onclick="processOrderCheckout()">Pay & Complete Order</button>
       <button class="btn-cart-full" style="margin-top:8px; width:100%; border:none; color:#888;" onclick="closeModal('checkoutModal')">Cancel</button>
     </div>
   </div>
@@ -500,8 +484,8 @@
           <strong id="successPayMethod" style="color:var(--success);">CONFIRMED</strong>
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-          <span>Delivery Date:</span>
-          <strong id="successDeliveryDate">3 Business Days</strong>
+          <span>Delivery Window:</span>
+          <strong>2-3 Business Days</strong>
         </div>
         <div style="border-top:1px solid #222; margin-top:8px; padding-top:8px;">
           <span>Items Ordered:</span>
@@ -598,7 +582,8 @@
   </footer>
 
   <script>
-    const STORE_UPI_ID = "8447311105@ptaxis";
+    // Configured Razorpay Test Key
+    const RAZORPAY_KEY_ID = "rzp_test_TVk8p918iozbvk";
     
     let defaultInventory = {
       1: { 'S': 3, 'M': 5, 'L': 2, 'XL': 0 },
@@ -612,7 +597,7 @@
     let wishlist = [];
     let user = null;
     let activeCheckoutItems = [];
-    let currentPaymentMethod = 'UPI';
+    let currentPaymentMethod = 'ONLINE';
     let logoClicks = 0;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -672,6 +657,7 @@
           <div style="color:#aaa;">Address: ${o.customer.address}</div>
           <div style="color:#fff; margin-top:4px;">Items: ${o.items.map(i => i.title + ' [' + i.size + ']').join(', ')}</div>
           <div style="color:var(--success); font-weight:700; margin-top:2px;">Total: ₹${o.total} (${o.payment})</div>
+          ${o.paymentId ? `<div style="color:#9e9e9e;">Razorpay ID: ${o.paymentId}</div>` : ''}
         </div>
       `).join('');
     }
@@ -785,7 +771,7 @@
       }
     }
 
-    /* DIRECT CHECKOUT LOGIC */
+    /* CHECKOUT MODAL LOGIC */
     function startDirectCheckout(title, price, pId) {
       if (!user) return;
       activeCheckoutItems = [{ title: title, price: price, size: selectedSizes[pId], pId: pId }];
@@ -806,50 +792,80 @@
       document.getElementById('coSubtotal').innerText = "₹" + total;
       document.getElementById('coTotal').innerText = "₹" + total;
 
-      selectPayOption('UPI');
+      selectPayOption('ONLINE');
       openModal('checkoutModal');
     }
 
     function selectPayOption(method) {
       currentPaymentMethod = method;
-      document.getElementById('opt-upi').classList.toggle('selected', method === 'UPI');
-      document.getElementById('opt-card').classList.toggle('selected', method === 'CARD');
+      document.getElementById('opt-online').classList.toggle('selected', method === 'ONLINE');
       document.getElementById('opt-cod').classList.toggle('selected', method === 'COD');
 
       let area = document.getElementById('paymentContentArea');
-      if (method === 'UPI') {
+      let btn = document.getElementById('checkoutSubmitBtn');
+      let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
+
+      if (method === 'ONLINE') {
         area.innerHTML = `
-          <div class="qr-container">
-            <div class="qr-box">
-              <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=upi://pay?pa=${STORE_UPI_ID}%26pn=THE%20AUREN%26cu=INR" alt="UPI QR">
-            </div>
-            <p style="font-size:10px; color:#aaa;">Scan using GPay, PhonePe, Paytm or use UPI ID:</p>
-            <div style="background:#111; padding:6px; font-size:11px; font-weight:700; color:#fff; border:1px solid #333; margin-top:4px;">${STORE_UPI_ID}</div>
+          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa; text-align:center;">
+            🔒 Official Razorpay Gateway. Pay using any UPI app (GPay, PhonePe, Paytm), Debit/Credit Card, or Netbanking.
           </div>
         `;
-      } else if (method === 'CARD') {
-        area.innerHTML = `
-          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0;">
-            <input type="text" class="input-field" placeholder="CARD NUMBER (16 DIGITS)" maxlength="16">
-            <div style="display:flex; gap:8px;">
-              <input type="text" class="input-field" placeholder="MM/YY" maxlength="5">
-              <input type="password" class="input-field" placeholder="CVV" maxlength="3">
-            </div>
-          </div>
-        `;
+        btn.innerText = `Pay ₹${total} via Razorpay`;
       } else if (method === 'COD') {
         area.innerHTML = `
-          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa;">
-            📦 Cash on Delivery confirmed. Please keep exact cash ready during delivery.
+          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa; text-align:center;">
+            📦 Cash on Delivery confirmed. Please keep ₹${total} cash ready at delivery.
           </div>
         `;
+        btn.innerText = `Confirm COD Order`;
       }
     }
 
-    function confirmAndPlaceOrder() {
+    function processOrderCheckout() {
+      if (currentPaymentMethod === 'ONLINE') {
+        initiateRazorpayPayment();
+      } else {
+        finalizeOrder("COD_ORDER");
+      }
+    }
+
+    /* RAZORPAY INTEGRATION */
+    function initiateRazorpayPayment() {
+      let totalAmount = activeCheckoutItems.reduce((sum, item) => sum + item.price, 0);
+
+      let options = {
+        "key": RAZORPAY_KEY_ID,
+        "amount": totalAmount * 100, // Razorpay amount in paise
+        "currency": "INR",
+        "name": "THE AUREN",
+        "description": "Drop 01 Checkout",
+        "handler": function (response) {
+          // Triggered only after bank verifies transaction
+          finalizeOrder(response.razorpay_payment_id);
+        },
+        "prefill": {
+          "name": user ? user.name : "",
+          "email": user ? user.email : "",
+          "contact": user ? user.phone : ""
+        },
+        "theme": {
+          "color": "#050505"
+        }
+      };
+
+      let rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response) {
+        alert("Payment Failed: " + response.error.description);
+      });
+      rzp.open();
+    }
+
+    function finalizeOrder(paymentReference) {
       let orderId = "#AUR-" + Math.floor(1000 + Math.random() * 9000);
       let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
 
+      // Decrement Inventory
       activeCheckoutItems.forEach(item => {
         if (inventory[item.pId] && inventory[item.pId][item.size] > 0) {
           inventory[item.pId][item.size]--;
@@ -862,10 +878,12 @@
         id: orderId,
         date: new Date().toLocaleDateString('en-GB'),
         total: total,
-        payment: currentPaymentMethod,
+        payment: currentPaymentMethod === 'ONLINE' ? 'Razorpay Verified' : 'COD',
+        paymentId: paymentReference,
         customer: { ...user },
         items: [...activeCheckoutItems]
       };
+
       placedOrders.unshift(newOrder);
       localStorage.setItem('theAurenOrders', JSON.stringify(placedOrders));
 
@@ -873,7 +891,7 @@
       document.getElementById('cartBar').style.display = 'none';
 
       document.getElementById('successOrderId').innerText = orderId;
-      document.getElementById('successPayMethod').innerText = currentPaymentMethod + " (VERIFIED)";
+      document.getElementById('successPayMethod').innerText = currentPaymentMethod === 'ONLINE' ? `VERIFIED (${paymentReference})` : 'COD PENDING';
       document.getElementById('successItemList').innerHTML = activeCheckoutItems.map(i => `• ${i.title} (${i.size}) - ₹${i.price}`).join('<br>');
 
       closeModal('checkoutModal');
