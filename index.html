@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Firebase SDKs (Auth & Firestore) -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
@@ -23,6 +23,7 @@
       --text: #f5f5f5;
       --muted: #999999;
       --accent: #ffffff;
+      --gold: #d4af37;
     }
 
     * {
@@ -94,6 +95,42 @@
       font-size: 0.7rem;
       font-weight: 600;
       margin-left: 5px;
+    }
+
+    /* Admin Pill on Header */
+    .admin-indicator {
+      display: none;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 4px 10px;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* Floating Admin HQ Bar */
+    #admin-hq-bar {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      background: #000;
+      border: 1px solid var(--gold);
+      box-shadow: 0 4px 30px rgba(212, 175, 55, 0.2);
+      padding: 12px 20px;
+      border-radius: 4px;
+      align-items: center;
+      gap: 16px;
+    }
+
+    #admin-hq-bar span {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
     }
 
     /* Hero Section */
@@ -221,7 +258,6 @@
       font-weight: 300;
     }
 
-    /* Size Selector */
     .size-selector {
       margin-bottom: 20px;
     }
@@ -395,7 +431,84 @@
       text-transform: uppercase;
     }
 
-    /* Drawer Cart */
+    /* Modals & Cart */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #141414;
+      border: 1px solid var(--border);
+      padding: 36px 30px;
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+    }
+
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 3px;
+      font-size: 1.25rem;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .modal-text {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px;
+      background: #090909;
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: #666;
+    }
+
+    .action-btn {
+      width: 100%;
+      background: #ffffff;
+      color: #000000;
+      padding: 14px;
+      border: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .close-icon {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Cart Drawer */
     .cart-drawer {
       position: fixed;
       right: -100%;
@@ -438,110 +551,42 @@
       font-size: 0.85rem;
     }
 
-    /* Modals */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.88);
-      backdrop-filter: blur(8px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      padding: 20px;
+    /* Admin Console Dedicated Styling */
+    .admin-kpi {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    .modal-box {
-      background: #141414;
+    .kpi-card {
       border: 1px solid var(--border);
-      padding: 36px 30px;
-      width: 100%;
-      max-width: 440px;
-      position: relative;
-    }
-
-    .modal-title {
-      font-family: 'Cinzel', serif;
-      letter-spacing: 3px;
-      font-size: 1.25rem;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .modal-text {
-      color: var(--muted);
-      font-size: 0.82rem;
-      text-align: center;
-      margin-bottom: 24px;
-      line-height: 1.5;
-    }
-
-    /* Size Guide Table */
-    .size-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0 24px;
-      font-size: 0.8rem;
-      text-align: center;
-    }
-
-    .size-table th, .size-table td {
-      border: 1px solid var(--border);
-      padding: 10px;
-    }
-
-    .size-table th {
       background: #090909;
-      letter-spacing: 1px;
-      color: #fff;
-    }
-
-    .input-field {
-      width: 100%;
       padding: 14px;
-      background: #090909;
-      border: 1px solid var(--border);
-      color: #fff;
-      font-size: 0.9rem;
-      margin-bottom: 16px;
-      outline: none;
+      text-align: center;
     }
 
-    .input-field:focus {
-      border-color: #666;
-    }
-
-    .action-btn {
-      width: 100%;
-      background: #ffffff;
-      color: #000000;
-      padding: 14px;
-      border: none;
-      font-size: 0.8rem;
+    .kpi-val {
+      font-size: 1.3rem;
       font-weight: 600;
+      color: #fff;
+      font-family: 'Cinzel', serif;
+    }
+
+    .kpi-label {
+      font-size: 0.68rem;
       letter-spacing: 2px;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
-
-    .close-icon {
-      position: absolute;
-      top: 16px;
-      right: 20px;
-      background: none;
-      border: none;
       color: var(--muted);
-      font-size: 1.5rem;
-      cursor: pointer;
+      text-transform: uppercase;
+      margin-top: 4px;
     }
 
-    /* Admin Order Card */
-    .order-record {
+    .order-entry {
       border: 1px solid var(--border);
-      background: #0b0b0b;
-      padding: 14px;
-      margin-bottom: 12px;
-      font-size: 0.8rem;
+      background: #080808;
+      padding: 16px;
+      margin-bottom: 14px;
+      font-size: 0.82rem;
       text-align: left;
     }
 
@@ -563,12 +608,19 @@
     <a href="#" class="brand-title">THE AUREN</a>
     <div class="nav-links">
       <a href="#about" class="nav-link">ARCHIVE & VISION</a>
+      <button class="admin-indicator" id="admin-header-btn" onclick="openModal('admin-modal')">ATELIER CONSOLE</button>
       <button class="nav-link" id="auth-nav-btn" onclick="openModal('auth-modal')">MEMBER ACCESS</button>
       <button class="nav-link" onclick="toggleCartDrawer()">
         BAG <span id="bag-count" class="bag-badge">0</span>
       </button>
     </div>
   </header>
+
+  <!-- Floating HQ Button for Owner -->
+  <div id="admin-hq-bar">
+    <span>FOUNDER ACTIVE</span>
+    <button class="action-btn" style="padding: 6px 14px; font-size: 0.7rem;" onclick="openModal('admin-modal')">OPEN HQ</button>
+  </div>
 
   <!-- Hero Section -->
   <div class="hero">
@@ -623,44 +675,19 @@
       <button class="close-icon" onclick="closeModal('sizeguide-modal')">&times;</button>
       <h3 class="modal-title">SIZE GUIDE</h3>
       <p class="modal-text">All measurements are in inches. Designed for an architectural, boxy drape.</p>
-
-      <table class="size-table">
+      <table style="width:100%; border-collapse: collapse; margin-bottom: 20px; font-size: 0.8rem; text-align: center;">
         <thead>
-          <tr>
-            <th>SIZE</th>
-            <th>CHEST</th>
-            <th>LENGTH</th>
-            <th>SHOULDER</th>
+          <tr style="border-bottom: 1px solid var(--border);">
+            <th style="padding: 10px;">SIZE</th><th>CHEST</th><th>LENGTH</th><th>SHOULDER</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td><strong>S</strong></td>
-            <td>42"</td>
-            <td>27"</td>
-            <td>20"</td>
-          </tr>
-          <tr>
-            <td><strong>M</strong></td>
-            <td>44"</td>
-            <td>28"</td>
-            <td>21"</td>
-          </tr>
-          <tr>
-            <td><strong>L</strong></td>
-            <td>46"</td>
-            <td>29"</td>
-            <td>22"</td>
-          </tr>
-          <tr>
-            <td><strong>XL</strong></td>
-            <td>48"</td>
-            <td>30"</td>
-            <td>23"</td>
-          </tr>
+          <tr><td style="padding: 8px;"><strong>S</strong></td><td>42"</td><td>27"</td><td>20"</td></tr>
+          <tr><td style="padding: 8px;"><strong>M</strong></td><td>44"</td><td>28"</td><td>21"</td></tr>
+          <tr><td style="padding: 8px;"><strong>L</strong></td><td>46"</td><td>29"</td><td>22"</td></tr>
+          <tr><td style="padding: 8px;"><strong>XL</strong></td><td>48"</td><td>30"</td><td>23"</td></tr>
         </tbody>
       </table>
-
       <button class="action-btn" onclick="closeModal('sizeguide-modal')">CLOSE GUIDE</button>
     </div>
   </div>
@@ -716,12 +743,24 @@
     </div>
   </div>
 
-  <!-- Secret Admin Modal -->
+  <!-- DEDICATED FOUNDER HQ MODAL -->
   <div class="modal-backdrop" id="admin-modal">
-    <div class="modal-box" style="max-width: 550px; max-height: 85vh; overflow-y: auto;">
+    <div class="modal-box" style="max-width: 600px; max-height: 85vh; overflow-y: auto;">
       <button class="close-icon" onclick="closeModal('admin-modal')">&times;</button>
-      <h3 class="modal-title">AUREN ATELIER ORDERS</h3>
-      <p class="modal-text">Centralized Firestore Live Feed</p>
+      <h3 class="modal-title" style="color: var(--gold);">ATELIER COMMAND HQ</h3>
+      <p class="modal-text">Live Orders & Financial Records</p>
+
+      <div class="admin-kpi">
+        <div class="kpi-card">
+          <div class="kpi-val" id="kpi-total-rev">₹0</div>
+          <div class="kpi-label">GROSS SALES</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-val" id="kpi-order-count">0</div>
+          <div class="kpi-label">TOTAL ORDERS</div>
+        </div>
+      </div>
+
       <div id="admin-orders-container">Loading orders...</div>
     </div>
   </div>
@@ -743,6 +782,9 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // Owner Super-Admin Phone Definition
+    const OWNER_PHONE = "+918447311105";
+
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible'
     });
@@ -750,7 +792,7 @@
     let confirmationResultObj = null;
 
     /* -------------------------------------------------------------
-       2. PRODUCTS DATA & SIZE STATE
+       2. PRODUCTS DATA & STATE
     ------------------------------------------------------------- */
     const items = [
       {
@@ -773,12 +815,7 @@
       }
     ];
 
-    const selectedSizes = {
-      "AUR-01": "M",
-      "AUR-02": "M",
-      "AUR-03": "M"
-    };
-
+    const selectedSizes = { "AUR-01": "M", "AUR-02": "M", "AUR-03": "M" };
     let cart = [];
 
     function selectSize(productId, size) {
@@ -875,10 +912,11 @@
     }
 
     /* -------------------------------------------------------------
-       4. AUTHENTICATION (OTP)
+       4. AUTHENTICATION & ROLE MANAGEMENT (ADMIN vs USER)
     ------------------------------------------------------------- */
     function openModal(id) {
       document.getElementById(id).style.display = 'flex';
+      if(id === 'admin-modal') loadAdminDashboard();
     }
 
     function closeModal(id) {
@@ -924,7 +962,7 @@
           const user = result.user;
           localStorage.setItem('auren_user', JSON.stringify({ phone: user.phoneNumber }));
           checkAuthStatus();
-          status.innerText = "Membership Confirmed.";
+          status.innerText = "Session Authenticated.";
           setTimeout(() => {
             closeModal('auth-modal');
           }, 800);
@@ -936,21 +974,40 @@
 
     function checkAuthStatus() {
       const user = localStorage.getItem('auren_user');
-      const btn = document.getElementById('auth-nav-btn');
+      const authBtn = document.getElementById('auth-nav-btn');
+      const adminHeaderBtn = document.getElementById('admin-header-btn');
+      const adminHQBar = document.getElementById('admin-hq-bar');
+
       if (user) {
         const parsed = JSON.parse(user);
-        btn.innerText = "MEMBER: " + parsed.phone.slice(-4);
-        btn.onclick = () => {
+        
+        // ADMIN DETECTION LOGIC
+        if (parsed.phone === OWNER_PHONE) {
+          adminHeaderBtn.style.display = "block";
+          adminHQBar.style.display = "flex";
+          authBtn.innerText = "FOUNDER LOGOUT";
+        } else {
+          adminHeaderBtn.style.display = "none";
+          adminHQBar.style.display = "none";
+          authBtn.innerText = "MEMBER: " + parsed.phone.slice(-4);
+        }
+
+        authBtn.onclick = () => {
           if (confirm("Disconnect active session?")) {
             localStorage.removeItem('auren_user');
             location.reload();
           }
         };
+      } else {
+        adminHeaderBtn.style.display = "none";
+        adminHQBar.style.display = "none";
+        authBtn.innerText = "MEMBER ACCESS";
+        authBtn.onclick = () => openModal('auth-modal');
       }
     }
 
     /* -------------------------------------------------------------
-       5. FIRESTORE DATABASE SAVE & WHATSAPP DISPATCH
+       5. DATABASE SAVING & ORDER DISPATCH
     ------------------------------------------------------------- */
     function openCheckoutModal() {
       if (cart.length === 0) {
@@ -999,13 +1056,11 @@
       };
 
       try {
-        // Save permanently to Firebase Firestore
         await db.collection("orders").add(orderData);
       } catch (err) {
-        console.error("Database save failed:", err);
+        console.error("Firestore Error:", err);
       }
 
-      // WhatsApp Forwarding
       const STORE_PHONE = "918447311105";
       const message = `*THE AUREN — NEW ORDER CONFIRMATION*%0A%0A` +
         `*Client:* ${name}%0A` +
@@ -1013,7 +1068,7 @@
         `*Delivery Coordinates:* ${addr}, ${city}%0A%0A` +
         `*Selection:*%0A${itemsFormatted}%0A%0A` +
         `*Total Value:* ₹${total.toLocaleString('en-IN')}%0A` +
-        `*Status:* Stored in DB & Awaiting Dispatch`;
+        `*Status:* Stored in Cloud DB & Awaiting Dispatch`;
 
       window.open(`https://wa.me/${STORE_PHONE}?text=${message}`, '_blank');
 
@@ -1026,46 +1081,56 @@
     }
 
     /* -------------------------------------------------------------
-       6. SECRET ADMIN ORDER VIEWER (#admin)
+       6. DEDICATED ADMIN CONTROLLER LOGIC
     ------------------------------------------------------------- */
-    function checkAdminHash() {
-      if (window.location.hash === "#admin") {
-        openModal('admin-modal');
-        loadAdminOrders();
-      }
-    }
-
-    async function loadAdminOrders() {
+    async function loadAdminDashboard() {
       const container = document.getElementById('admin-orders-container');
+      const revEl = document.getElementById('kpi-total-rev');
+      const countEl = document.getElementById('kpi-order-count');
+
       try {
         const snap = await db.collection("orders").orderBy("createdAt", "desc").get();
         if (snap.empty) {
-          container.innerHTML = "<p style='color: #666;'>No orders recorded yet.</p>";
+          container.innerHTML = "<p style='color: #666; text-align: center; padding: 20px;'>No client orders recorded yet.</p>";
+          revEl.innerText = "₹0";
+          countEl.innerText = "0";
           return;
         }
+
+        let totalGross = 0;
+        countEl.innerText = snap.docs.length;
+
         container.innerHTML = snap.docs.map(doc => {
           const o = doc.data();
+          totalGross += Number(o.totalAmount) || 0;
           return `
-            <div class="order-record">
-              <div><strong>Client:</strong> ${o.customerName} (${o.phone})</div>
-              <div><strong>Address:</strong> ${o.address}</div>
-              <div style="margin: 4px 0;"><strong>Items:</strong> ${o.items.map(i => `${i.title} [${i.size}]`).join(', ')}</div>
-              <div><strong>Total:</strong> ₹${o.totalAmount} | <span style="color: #4cd137;">${o.status}</span></div>
+            <div class="order-entry">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <strong style="color: #fff; font-size: 0.9rem;">${o.customerName}</strong>
+                <span style="color: var(--gold);">${new Date(o.createdAt).toLocaleDateString()}</span>
+              </div>
+              <div style="color: var(--muted); margin-bottom: 6px;">📞 ${o.phone} | 📍 ${o.address}</div>
+              <div style="border-top: 1px solid #1a1a1a; padding-top: 8px; margin-top: 8px;">
+                ${o.items.map(i => `<div>• ${i.title} [Size: <strong>${i.size}</strong>] — ₹${i.price}</div>`).join('')}
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 10px; font-weight: 600;">
+                <span>Total: ₹${o.totalAmount}</span>
+                <span style="color: #4cd137;">${o.status}</span>
+              </div>
             </div>
           `;
         }).join('');
+
+        revEl.innerText = `₹${totalGross.toLocaleString('en-IN')}`;
       } catch (err) {
-        container.innerHTML = `<p style="color: #ff4d4d;">Error loading orders: ${err.message}</p>`;
+        container.innerHTML = `<p style="color: #ff4d4d;">Access Denied or Rules Error: ${err.message}</p>`;
       }
     }
-
-    window.addEventListener("hashchange", checkAdminHash);
 
     // Init
     renderProducts();
     updateBagUI();
     checkAuthStatus();
-    checkAdminHash();
   </script>
 </body>
 </html>
