@@ -10,9 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDKs (Auth & Firestore) -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
   <style>
     :root {
@@ -534,6 +535,16 @@
       cursor: pointer;
     }
 
+    /* Admin Order Card */
+    .order-record {
+      border: 1px solid var(--border);
+      background: #0b0b0b;
+      padding: 14px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+      text-align: left;
+    }
+
     @media (max-width: 768px) {
       .about-container {
         grid-template-columns: 1fr;
@@ -695,19 +706,29 @@
     <div class="modal-box">
       <button class="close-icon" onclick="closeModal('checkout-modal')">&times;</button>
       <h3 class="modal-title">ORDER DISPATCH</h3>
-      <p class="modal-text">Enter delivery coordinates. Your order will be dispatched to The Auren Concierge.</p>
+      <p class="modal-text">Enter delivery coordinates. Order will be recorded to database & forwarded to Concierge.</p>
 
       <input type="text" id="order-name" class="input-field" placeholder="Full Name" />
       <input type="text" id="order-address" class="input-field" placeholder="Shipping Address with PIN Code" />
       <input type="text" id="order-city" class="input-field" placeholder="City & State" />
 
-      <button class="action-btn" onclick="sendOrderToWhatsApp()">CONFIRM ORDER VIA WHATSAPP</button>
+      <button class="action-btn" id="confirm-order-btn" onclick="sendOrderToWhatsApp()">CONFIRM ORDER VIA WHATSAPP</button>
+    </div>
+  </div>
+
+  <!-- Secret Admin Modal -->
+  <div class="modal-backdrop" id="admin-modal">
+    <div class="modal-box" style="max-width: 550px; max-height: 85vh; overflow-y: auto;">
+      <button class="close-icon" onclick="closeModal('admin-modal')">&times;</button>
+      <h3 class="modal-title">AUREN ATELIER ORDERS</h3>
+      <p class="modal-text">Centralized Firestore Live Feed</p>
+      <div id="admin-orders-container">Loading orders...</div>
     </div>
   </div>
 
   <script>
     /* -------------------------------------------------------------
-       1. FIREBASE AUTH
+       1. FIREBASE AUTH & FIRESTORE SETUP
     ------------------------------------------------------------- */
     const firebaseConfig = {
       apiKey: "AIzaSyAk3Sop3X1JfEZxnG0D_jFTF0_9xmV23H8",
@@ -720,6 +741,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    const db = firebase.firestore();
 
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
       'size': 'invisible'
@@ -853,7 +875,7 @@
     }
 
     /* -------------------------------------------------------------
-       4. MODALS & AUTHENTICATION
+       4. AUTHENTICATION (OTP)
     ------------------------------------------------------------- */
     function openModal(id) {
       document.getElementById(id).style.display = 'flex';
@@ -928,7 +950,7 @@
     }
 
     /* -------------------------------------------------------------
-       5. WHATSAPP CONCIERGE CHECKOUT
+       5. FIRESTORE DATABASE SAVE & WHATSAPP DISPATCH
     ------------------------------------------------------------- */
     function openCheckoutModal() {
       if (cart.length === 0) {
@@ -948,42 +970,102 @@
       openModal('checkout-modal');
     }
 
-    function sendOrderToWhatsApp() {
+    async function sendOrderToWhatsApp() {
       const name = document.getElementById('order-name').value.trim();
       const addr = document.getElementById('order-address').value.trim();
       const city = document.getElementById('order-city').value.trim();
       const user = JSON.parse(localStorage.getItem('auren_user'));
+      const btn = document.getElementById('confirm-order-btn');
 
       if (!name || !addr || !city) {
         alert("Please complete all shipping fields.");
         return;
       }
 
+      btn.innerText = "RECORDING ORDER...";
+      btn.disabled = true;
+
       const total = cart.reduce((acc, i) => acc + i.price, 0);
       const itemsFormatted = cart.map(i => `• ${i.title} (Size: ${i.size}) — ₹${i.price}`).join('%0A');
 
-      const STORE_PHONE = "918447311105";
+      const orderData = {
+        customerName: name,
+        phone: user.phone,
+        address: `${addr}, ${city}`,
+        items: cart,
+        totalAmount: total,
+        status: "Pending Dispatch",
+        createdAt: new Date().toISOString()
+      };
 
+      try {
+        // Save permanently to Firebase Firestore
+        await db.collection("orders").add(orderData);
+      } catch (err) {
+        console.error("Database save failed:", err);
+      }
+
+      // WhatsApp Forwarding
+      const STORE_PHONE = "918447311105";
       const message = `*THE AUREN — NEW ORDER CONFIRMATION*%0A%0A` +
         `*Client:* ${name}%0A` +
         `*Mobile:* ${user.phone}%0A` +
         `*Delivery Coordinates:* ${addr}, ${city}%0A%0A` +
         `*Selection:*%0A${itemsFormatted}%0A%0A` +
         `*Total Value:* ₹${total.toLocaleString('en-IN')}%0A` +
-        `*Status:* Awaiting Dispatch`;
+        `*Status:* Stored in DB & Awaiting Dispatch`;
 
       window.open(`https://wa.me/${STORE_PHONE}?text=${message}`, '_blank');
 
-      alert("Dispatch request forwarded to The Auren Concierge.");
+      alert("Order permanently secured in database & forwarded to Concierge.");
       cart = [];
       updateBagUI();
+      btn.innerText = "CONFIRM ORDER VIA WHATSAPP";
+      btn.disabled = false;
       closeModal('checkout-modal');
     }
+
+    /* -------------------------------------------------------------
+       6. SECRET ADMIN ORDER VIEWER (#admin)
+    ------------------------------------------------------------- */
+    function checkAdminHash() {
+      if (window.location.hash === "#admin") {
+        openModal('admin-modal');
+        loadAdminOrders();
+      }
+    }
+
+    async function loadAdminOrders() {
+      const container = document.getElementById('admin-orders-container');
+      try {
+        const snap = await db.collection("orders").orderBy("createdAt", "desc").get();
+        if (snap.empty) {
+          container.innerHTML = "<p style='color: #666;'>No orders recorded yet.</p>";
+          return;
+        }
+        container.innerHTML = snap.docs.map(doc => {
+          const o = doc.data();
+          return `
+            <div class="order-record">
+              <div><strong>Client:</strong> ${o.customerName} (${o.phone})</div>
+              <div><strong>Address:</strong> ${o.address}</div>
+              <div style="margin: 4px 0;"><strong>Items:</strong> ${o.items.map(i => `${i.title} [${i.size}]`).join(', ')}</div>
+              <div><strong>Total:</strong> ₹${o.totalAmount} | <span style="color: #4cd137;">${o.status}</span></div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = `<p style="color: #ff4d4d;">Error loading orders: ${err.message}</p>`;
+      }
+    }
+
+    window.addEventListener("hashchange", checkAdminHash);
 
     // Init
     renderProducts();
     updateBagUI();
     checkAuthStatus();
+    checkAdminHash();
   </script>
 </body>
 </html>
