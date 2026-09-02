@@ -1,949 +1,653 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-site-verification" content="JJR9BllRjXiDhtA64yjyEqrC8V3OXK4Zm_sxUd46c3w" />
-  <title>THE AUREN | Luxury Essentials</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>THE AUREN | Luxury Apparel</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Official Razorpay Checkout Script -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
   
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
   <style>
     :root {
-      --bg: #050505;
-      --surface: #0e0e0e;
-      --surface-border: #1f1f1f;
-      --text: #f5f5f5;
-      --text-muted: #888888;
-      --white: #ffffff;
-      --black: #000000;
-      --discount: #f59e0b;
-      --success: #10b981;
-      --danger: #ef4444;
+      --bg: #0b0b0b;
+      --card-bg: #121212;
+      --border: #222222;
+      --text: #ffffff;
+      --muted: #888888;
+      --accent: #ffffff;
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background-color: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; line-height: 1.5; overflow-x: hidden; }
-    a { color: inherit; text-decoration: none; }
-
-    /* Mandatory Access Modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.94);
-      backdrop-filter: blur(14px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-      padding: 20px;
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .modal-box {
-      background: var(--surface);
-      border: 1px solid var(--surface-border);
-      padding: 35px 25px;
-      max-width: 440px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .modal-box h2 { font-size: 20px; letter-spacing: 6px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
-    .modal-box p { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 24px; }
-    
-    .input-field {
-      width: 100%;
-      background: #000;
-      border: 1px solid var(--surface-border);
-      padding: 13px 15px;
-      font-size: 11px;
-      color: #fff;
-      margin-bottom: 12px;
-      outline: none;
-      letter-spacing: 1px;
-      transition: border-color 0.2s ease;
-    }
-    .input-field:focus { border-color: #666; }
-    textarea.input-field { resize: none; height: 70px; }
-
-    .btn-solid {
-      width: 100%;
-      background: var(--white);
-      color: var(--black);
-      border: none;
-      padding: 13px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: opacity 0.2s;
-    }
-    .btn-solid:hover { opacity: 0.85; }
-
-    /* Top Strip */
-    .top-strip {
-      background: #000;
-      color: var(--text-muted);
-      font-size: 10px;
-      text-align: center;
-      padding: 9px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      border-bottom: 1px solid var(--surface-border);
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* Navbar */
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 18px 6%;
-      background: rgba(5, 5, 5, 0.95);
-      backdrop-filter: blur(10px);
+    header {
       position: sticky;
       top: 0;
       z-index: 100;
-      border-bottom: 1px solid var(--surface-border);
-    }
-    .brand-logo { font-size: 18px; font-weight: 700; letter-spacing: 6px; text-transform: uppercase; cursor: pointer; user-select: none; }
-    .nav-actions { display: flex; align-items: center; gap: 16px; }
-    .nav-link-btn { background: none; border: none; color: var(--text-muted); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
-    .nav-link-btn:hover { color: var(--white); }
-    
-    .profile-trigger {
-      background: transparent;
-      border: 1px solid var(--surface-border);
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
+      background: rgba(11, 11, 11, 0.9);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 24px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--white);
     }
-    .profile-trigger svg { width: 16px; height: 16px; fill: currentColor; }
 
-    /* Slide-out Dashboard */
-    .drawer-overlay {
+    .logo {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 4px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 4px;
+      transition: 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      opacity: 0.7;
+    }
+
+    .cart-badge {
+      background: #fff;
+      color: #000;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    .hero h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2.4rem;
+      letter-spacing: 6px;
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Grid */
+    .catalog {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #333;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 340px;
+      object-fit: cover;
+      background: #1a1a1a;
+    }
+
+    .card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .card-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      letter-spacing: 1px;
+      margin-bottom: 6px;
+    }
+
+    .card-price {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .add-btn {
+      margin-top: auto;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      padding: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .add-btn:hover {
+      opacity: 0.85;
+    }
+
+    /* Modals */
+    .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(6px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      z-index: 9990;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      padding: 20px;
     }
-    .drawer-overlay.active { opacity: 1; visibility: visible; }
 
-    .drawer {
+    .modal {
+      background: #141414;
+      border: 1px solid var(--border);
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 6px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .modal h3 {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 3px;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .modal-sub {
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.4;
+    }
+
+    .field {
+      width: 100%;
+      padding: 12px 14px;
+      background: #0b0b0b;
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .field:focus {
+      border-color: #555;
+    }
+
+    .primary-btn {
+      width: 100%;
+      background: #fff;
+      color: #000;
+      padding: 12px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      cursor: pointer;
+      text-transform: uppercase;
+      border-radius: 4px;
+    }
+
+    .status-msg {
+      margin-top: 14px;
+      font-size: 0.8rem;
+      text-align: center;
+      color: #aaa;
+      min-height: 18px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    /* Cart Sidebar / Drawer */
+    .cart-drawer {
       position: fixed;
+      right: -100%;
       top: 0;
-      right: -420px;
       width: 100%;
       max-width: 380px;
       height: 100%;
-      background: var(--surface);
-      border-left: 1px solid var(--surface-border);
-      z-index: 9991;
-      padding: 25px 22px;
+      background: #111;
+      border-left: 1px solid var(--border);
+      z-index: 1000;
+      transition: 0.3s ease;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
-      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 24px;
     }
-    .drawer.active { right: 0; }
-    .drawer-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 18px; border-bottom: 1px solid var(--surface-border); }
-    .drawer-header h3 { font-size: 13px; letter-spacing: 3px; font-weight: 600; text-transform: uppercase; }
-    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
-    .drawer-user-info { padding: 16px 0; border-bottom: 1px solid var(--surface-border); }
-    .user-greeting { font-size: 14px; font-weight: 600; letter-spacing: 1px; }
-    .user-contact { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
-    .drawer-menu { list-style: none; margin-top: 15px; display: flex; flex-direction: column; gap: 8px; }
-    .drawer-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; background: #000; border: 1px solid var(--surface-border); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
 
-    /* Products Area */
-    .products { padding: 40px 6%; max-width: 1300px; margin: 0 auto; }
-    .section-head { text-align: center; margin-bottom: 40px; }
-    .section-head h2 { font-size: 14px; letter-spacing: 4px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); }
+    .cart-drawer.open {
+      right: 0;
+    }
 
-    .p-container { display: flex; flex-direction: column; gap: 60px; }
-    .p-card { background: var(--surface); border: 1px solid var(--surface-border); padding: 24px; display: grid; grid-template-columns: 1fr 1.2fr; gap: 35px; }
-    @media (max-width: 850px) { .p-card { grid-template-columns: 1fr; } }
+    .cart-items {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin: 20px 0;
+    }
 
-    .p-gallery { width: 100%; position: relative; }
-    .p-img-box { width: 100%; height: 480px; background: #000; overflow: hidden; position: relative; }
-    .p-img-box img { width: 100%; height: 100%; object-fit: cover; }
-    .wish-btn { position: absolute; top: 14px; right: 14px; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); border: 1px solid #333; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #fff; }
-    .wish-btn.active { color: var(--danger); border-color: var(--danger); }
-    .wish-btn svg { width: 16px; height: 16px; fill: currentColor; }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+      font-size: 0.85rem;
+    }
 
-    .p-details { display: flex; flex-direction: column; }
-    .brand-title { font-size: 16px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
-    .prod-desc-title { font-size: 13px; color: var(--text-muted); margin-bottom: 14px; letter-spacing: 0.5px; }
-
-    .price-block { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; }
-    .curr-price { font-size: 20px; font-weight: 700; color: #fff; }
-    .mrp-price { font-size: 13px; color: var(--text-muted); text-decoration: line-through; }
-    .discount-tag { font-size: 12px; font-weight: 700; color: var(--discount); letter-spacing: 1px; }
-
-    .coupon-box { background: #161616; border: 1px dashed #333; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .coupon-info { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-    .coupon-badge { background: #222; color: var(--white); font-size: 10px; font-weight: 700; padding: 4px 8px; border: 1px solid #444; }
-
-    .size-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .size-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
-    .size-chart-link { font-size: 11px; color: var(--text-muted); text-decoration: underline; cursor: pointer; }
-    
-    .sizes-grid { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
-    .size-pill { min-width: 48px; height: 44px; background: transparent; border: 1px solid var(--surface-border); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; cursor: pointer; }
-    .size-pill.active { background: #fff; color: #000; border-color: #fff; font-weight: 700; }
-    .size-pill.disabled { opacity: 0.25; cursor: not-allowed; text-decoration: line-through; pointer-events: none; }
-    .stock-tag { font-size: 8px; color: var(--discount); font-weight: 600; margin-top: 1px; }
-
-    .actions-grid { display: flex; gap: 10px; margin-bottom: 24px; }
-    .btn-buy-full { flex: 1; background: #fff; color: #000; border: none; padding: 14px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; text-align: center; }
-    .btn-cart-full { flex: 1; background: transparent; color: #fff; border: 1px solid #333; padding: 14px; font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; }
-
-    .delivery-box { background: #080808; border: 1px solid var(--surface-border); padding: 16px; margin-bottom: 24px; }
-    .delivery-head { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
-    .address-preview { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #ccc; border-bottom: 1px solid #1a1a1a; padding-bottom: 10px; margin-bottom: 10px; }
-    .change-btn { font-size: 10px; color: #fff; text-decoration: underline; cursor: pointer; }
-    .service-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); margin-top: 6px; }
-    .service-icon { color: var(--success); font-weight: bold; }
-
-    .specs-box { border-top: 1px solid var(--surface-border); padding-top: 18px; margin-bottom: 20px; }
-    .specs-title { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
-    .specs-list { list-style: none; font-size: 11px; color: var(--text-muted); line-height: 1.8; }
-    .specs-list li::before { content: "• "; color: #fff; }
-
-    .trust-badges-row { display: flex; gap: 20px; border-top: 1px solid var(--surface-border); border-bottom: 1px solid var(--surface-border); padding: 15px 0; margin-bottom: 24px; }
-    .badge-card { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #ccc; }
-
-    /* Floating Cart Bar */
-    .cart-bar { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(12px); border: 1px solid #333; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 15px 40px rgba(0,0,0,0.9); z-index: 900; }
-    .cart-summary { font-size: 11px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; }
-
-    /* Modals & Checkout UI */
-    .gen-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.88); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; z-index: 9998; padding: 20px; }
-    .gen-modal-box { background: var(--surface); border: 1px solid var(--surface-border); padding: 30px 24px; max-width: 480px; width: 100%; text-align: left; max-height: 88vh; overflow-y: auto; }
-    .gen-modal-box h3 { font-size: 14px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 14px; text-align: center; }
-
-    /* Payment Option Card Styles */
-    .pay-option-card { background: #080808; border: 1px solid var(--surface-border); padding: 14px; margin-bottom: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s; }
-    .pay-option-card.selected { border-color: var(--white); background: #121212; }
-    .pay-title { font-size: 11px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
-    .pay-sub { font-size: 9px; color: var(--text-muted); }
-
-    .summary-row { display: flex; justify-content: space-between; font-size: 11px; padding: 6px 0; color: #bbb; }
-    .summary-row.total { border-top: 1px solid var(--surface-border); margin-top: 8px; padding-top: 10px; color: #fff; font-weight: 700; font-size: 13px; }
-
-    .admin-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--surface-border); font-size: 11px; }
-    .admin-input { width: 60px; background: #000; border: 1px solid #333; color: #fff; padding: 5px; font-size: 11px; text-align: center; }
-
-    footer { text-align: center; padding: 40px 20px; color: #444; font-size: 10px; letter-spacing: 2px; border-top: 1px solid var(--surface-border); margin-top: 60px; text-transform: uppercase; }
+    .cart-total {
+      border-top: 1px solid #333;
+      padding-top: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Mandatory Access Gate -->
-  <div id="signupModal" class="modal-overlay">
-    <div class="modal-box">
-      <h2>THE AUREN</h2>
-      <p>Private Member Access</p>
-      <form id="signupForm" onsubmit="saveUserAccess(event)">
-        <input type="text" id="cName" class="input-field" placeholder="FULL NAME" required />
-        <input type="email" id="cEmail" class="input-field" placeholder="EMAIL ADDRESS" required />
-        <input type="tel" id="cPhone" class="input-field" placeholder="CONTACT NUMBER (10 DIGITS)" maxlength="10" required />
-        <textarea id="cAddress" class="input-field" placeholder="COMPLETE DELIVERY ADDRESS (HOUSE NO, STREET, CITY, PINCODE)" required></textarea>
-        <button type="submit" class="btn-solid">Enter Store</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="top-strip">Pan-India Express Dispatch | Limited Production Run</div>
-
+  <!-- Header -->
   <header>
-    <nav class="navbar">
-      <!-- 3 Taps on THE AUREN opens Owner Dashboard & Orders -->
-      <a href="javascript:void(0)" class="brand-logo" onclick="handleLogoClick()">THE AUREN</a>
-      <div class="nav-actions">
-        <button class="nav-link-btn" onclick="openModal('sizeGuideModal')">Size Guide</button>
-        <button class="nav-link-btn" onclick="openModal('aboutModal')">About</button>
-        <button class="profile-trigger" onclick="toggleDrawer(true)" title="My Account">
-          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        </button>
-      </div>
-    </nav>
+    <a href="#" class="logo">THE AUREN</a>
+    <div class="nav-actions">
+      <button class="nav-btn" id="auth-btn" onclick="openAuthModal()">MEMBER ACCESS</button>
+      <button class="nav-btn" onclick="toggleCart()">
+        BAG <span id="cart-count" class="cart-badge">0</span>
+      </button>
+    </div>
   </header>
 
-  <!-- Slide-out Account Dashboard -->
-  <div id="drawerOverlay" class="drawer-overlay" onclick="toggleDrawer(false)"></div>
-  <aside id="accountDrawer" class="drawer">
-    <div class="drawer-header">
-      <h3>Account Center</h3>
-      <button class="close-btn" onclick="toggleDrawer(false)">✕</button>
-    </div>
-
-    <div class="drawer-user-info">
-      <div class="user-greeting" id="dashUserName">Guest Member</div>
-      <div class="user-contact" id="dashUserContact">Access profile</div>
-    </div>
-
-    <ul class="drawer-menu">
-      <li class="drawer-item" onclick="openModal('profileEditModal')"><span>Profile & Saved Address</span> <span>→</span></li>
-      <li class="drawer-item" onclick="openModal('ordersModal')"><span>My Placed Orders (<span id="userOrderCount">0</span>)</span> <span>→</span></li>
-      <li class="drawer-item" onclick="openModal('wishlistModal')"><span>My Wishlist (<span id="wishCount">0</span>)</span> <span>→</span></li>
-      <li class="drawer-item" onclick="openModal('policyModal')"><span>Legal & Policies</span> <span>→</span></li>
-      <li class="drawer-item" onclick="resetUserSession()" style="border-color: #331111; color: var(--danger);"><span>Reset Session / Logout</span> <span>✕</span></li>
-    </ul>
-  </aside>
-
-  <!-- Products Section -->
-  <section class="products">
-    <div class="section-head">
-      <h2>Curated Drop 01</h2>
-    </div>
-
-    <div class="p-container">
-
-      <!-- Product 1 -->
-      <div class="p-card">
-        <div class="p-gallery">
-          <div class="p-img-box">
-            <button class="wish-btn" id="wbtn-1" onclick="toggleWishlist(1, 'Structured Boxy Hoodie', 1499)">
-              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80" alt="Structured Boxy Hoodie">
-          </div>
-        </div>
-
-        <div class="p-details">
-          <div class="brand-title">THE AUREN</div>
-          <div class="prod-desc-title">Structured Boxy Heavyweight Hoodie</div>
-
-          <div class="price-block">
-            <span class="curr-price">₹1,499</span>
-            <span class="mrp-price">MRP ₹3,499</span>
-            <span class="discount-tag">(57% OFF)</span>
-          </div>
-
-          <div class="coupon-box">
-            <div class="coupon-info">Instant Checkout Discount Applied</div>
-            <div class="coupon-badge">PREPAID DEAL</div>
-          </div>
-
-          <div class="size-header">
-            <span class="size-title">Select Size</span>
-            <span class="size-chart-link" onclick="openModal('sizeGuideModal')">Size Chart &gt;</span>
-          </div>
-          <div class="sizes-grid" id="sizes-1"></div>
-
-          <div class="actions-grid">
-            <button class="btn-buy-full" onclick="startDirectCheckout('Structured Boxy Hoodie', 1499, 1)">Place Order</button>
-            <button class="btn-cart-full" onclick="addToBag('Structured Boxy Hoodie', 1499, 1)">Add to Bag</button>
-          </div>
-
-          <div class="delivery-box">
-            <div class="delivery-head">Delivery & Services</div>
-            <div class="address-preview">
-              <span id="p1-del-addr">Delivery address set</span>
-              <span class="change-btn" onclick="openModal('profileEditModal')">Change</span>
-            </div>
-            <div class="service-row"><span class="service-icon">✓</span><span>Express Delivery in 2-3 Business Days</span></div>
-            <div class="service-row"><span class="service-icon">✓</span><span>Official Razorpay Payment Gateway & COD</span></div>
-          </div>
-
-          <div class="specs-box">
-            <div class="specs-title">Product Details</div>
-            <ul class="specs-list">
-              <li>Heavyweight 420 GSM French Terry Cotton</li>
-              <li>Signature boxy drop-shoulder aesthetic</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Product 2 -->
-      <div class="p-card">
-        <div class="p-gallery">
-          <div class="p-img-box">
-            <button class="wish-btn" id="wbtn-2" onclick="toggleWishlist(2, 'Minimalist Suede Jacket', 2999)">
-              <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </button>
-            <img src="https://images.unsplash.com/photo-1520975954732-35dd22299614?auto=format&fit=crop&w=800&q=80" alt="Minimalist Suede Jacket">
-          </div>
-        </div>
-
-        <div class="p-details">
-          <div class="brand-title">THE AUREN</div>
-          <div class="prod-desc-title">Minimalist Suede Tailored Jacket</div>
-
-          <div class="price-block">
-            <span class="curr-price">₹2,999</span>
-            <span class="mrp-price">MRP ₹5,999</span>
-            <span class="discount-tag">(50% OFF)</span>
-          </div>
-
-          <div class="size-header">
-            <span class="size-title">Select Size</span>
-            <span class="size-chart-link" onclick="openModal('sizeGuideModal')">Size Chart &gt;</span>
-          </div>
-          <div class="sizes-grid" id="sizes-2"></div>
-
-          <div class="actions-grid">
-            <button class="btn-buy-full" onclick="startDirectCheckout('Minimalist Suede Jacket', 2999, 2)">Place Order</button>
-            <button class="btn-cart-full" onclick="addToBag('Minimalist Suede Jacket', 2999, 2)">Add to Bag</button>
-          </div>
-
-          <div class="delivery-box">
-            <div class="delivery-head">Delivery & Services</div>
-            <div class="address-preview">
-              <span id="p2-del-addr">Delivery address set</span>
-              <span class="change-btn" onclick="openModal('profileEditModal')">Change</span>
-            </div>
-            <div class="service-row"><span class="service-icon">✓</span><span>Express Delivery in 2-3 Days</span></div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Floating Bag Bar -->
-  <div id="cartBar" class="cart-bar" style="display: none;">
-    <div class="cart-summary" id="cartLabel">0 Items | ₹0</div>
-    <button class="btn-solid" style="width:auto; padding: 8px 16px;" onclick="startBagCheckout()">Checkout Order</button>
+  <!-- Hero -->
+  <div class="hero">
+    <h1>AUTUMN / WINTER 26</h1>
+    <p>Exclusive Haute Couture & Streetwear</p>
   </div>
 
-  <!-- NATIVE WEBSITE CHECKOUT & PAYMENT MODAL -->
-  <div id="checkoutModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>Checkout & Payment</h3>
+  <!-- Product Catalog -->
+  <div class="catalog" id="catalog-grid"></div>
 
-      <div style="background:#080808; padding:12px; border:1px solid var(--surface-border); margin-bottom:15px;">
-        <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase;">Delivering To:</div>
-        <div style="font-size:11px; font-weight:600; color:#fff;" id="checkoutCustomerName">Customer</div>
-        <div style="font-size:10px; color:#aaa; margin-top:2px;" id="checkoutCustomerAddress">Address details</div>
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 style="font-family: 'Cinzel', serif; letter-spacing: 2px;">YOUR SELECTION</h3>
+      <button class="close-btn" style="position: static;" onclick="toggleCart()">&times;</button>
+    </div>
+    <div class="cart-items" id="cart-list"></div>
+    <div class="cart-total">
+      <span>TOTAL</span>
+      <span id="cart-total-amount">₹0</span>
+    </div>
+    <button class="primary-btn" onclick="openCheckout()">PROCEED TO ORDER</button>
+  </div>
+
+  <!-- Auth Modal (OTP) -->
+  <div class="overlay" id="auth-modal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeAuthModal()">&times;</button>
+      <h3>MEMBER ACCESS</h3>
+      <p class="modal-sub">Enter your phone number to receive an exclusive verification passcode.</p>
+
+      <!-- Step 1: Phone -->
+      <div id="phone-box">
+        <input type="tel" id="phone-number" class="field" placeholder="+91 9876543210" />
+        <div id="recaptcha-container"></div>
+        <button class="primary-btn" onclick="handleSendOTP()">REQUEST PASSCODE</button>
       </div>
 
-      <div style="background:#000; padding:12px; border:1px solid var(--surface-border); margin-bottom:15px;">
-        <div class="summary-row"><span>Item(s) Subtotal:</span><span id="coSubtotal">₹0</span></div>
-        <div class="summary-row"><span>Shipping Charges:</span><span style="color:var(--success);">FREE</span></div>
-        <div class="summary-row total"><span>Total Payable:</span><span id="coTotal">₹0</span></div>
+      <!-- Step 2: OTP (Hidden) -->
+      <div id="otp-box" style="display: none;">
+        <input type="text" id="otp-code" class="field" placeholder="6-digit code" maxlength="6" />
+        <button class="primary-btn" onclick="handleVerifyOTP()">VERIFY & ENTER</button>
       </div>
 
-      <div style="font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:10px;">Select Payment Option</div>
-
-      <div class="pay-option-card selected" id="opt-online" onclick="selectPayOption('ONLINE')">
-        <div>
-          <div class="pay-title">Instant Online Payment (Razorpay)</div>
-          <div class="pay-sub">UPI (GPay/PhonePe/Paytm), Cards, Netbanking</div>
-        </div>
-        <span style="font-size:14px;">⚡</span>
-      </div>
-
-      <div class="pay-option-card" id="opt-cod" onclick="selectPayOption('COD')">
-        <div>
-          <div class="pay-title">Cash on Delivery (COD)</div>
-          <div class="pay-sub">Pay at door during delivery</div>
-        </div>
-        <span style="font-size:14px;">📦</span>
-      </div>
-
-      <div id="paymentContentArea">
-        <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa; text-align:center;">
-          🔒 Secured by Razorpay. Click button below to complete verified payment.
-        </div>
-      </div>
-
-      <button class="btn-solid" id="checkoutSubmitBtn" style="margin-top:10px;" onclick="processOrderCheckout()">Pay & Complete Order</button>
-      <button class="btn-cart-full" style="margin-top:8px; width:100%; border:none; color:#888;" onclick="closeModal('checkoutModal')">Cancel</button>
+      <p class="status-msg" id="auth-status"></p>
     </div>
   </div>
 
-  <!-- ORDER SUCCESS / INVOICE SCREEN -->
-  <div id="orderSuccessModal" class="gen-modal">
-    <div class="gen-modal-box" style="text-align: center;">
-      <div style="font-size:36px; color:var(--success); margin-bottom:10px;">✓</div>
-      <h3>Order Placed Successfully!</h3>
-      <p style="font-size:11px; color:var(--text-muted); margin-bottom:15px;">Thank you for shopping with THE AUREN.</p>
-
-      <div style="background:#080808; border:1px solid var(--surface-border); padding:15px; text-align:left; margin-bottom:15px; font-size:11px;">
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-          <span>Order ID:</span>
-          <strong id="successOrderId" style="color:#fff;">#AUR-9281</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-          <span>Payment Status:</span>
-          <strong id="successPayMethod" style="color:var(--success);">CONFIRMED</strong>
-        </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-          <span>Delivery Window:</span>
-          <strong>2-3 Business Days</strong>
-        </div>
-        <div style="border-top:1px solid #222; margin-top:8px; padding-top:8px;">
-          <span>Items Ordered:</span>
-          <div id="successItemList" style="color:#aaa; margin-top:4px;"></div>
-        </div>
-      </div>
-
-      <button class="btn-solid" onclick="closeOrderSuccess()">Continue Exploring</button>
+  <!-- Checkout Modal -->
+  <div class="overlay" id="checkout-modal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeCheckout()">&times;</button>
+      <h3>DISPATCH DETAILS</h3>
+      <p class="modal-sub">Provide delivery details. Order confirmation will be delivered directly to the store manager.</p>
+      
+      <input type="text" id="cust-name" class="field" placeholder="Full Name" />
+      <input type="text" id="cust-address" class="field" placeholder="Complete Shipping Address with PIN" />
+      <input type="text" id="cust-city" class="field" placeholder="City & State" />
+      
+      <button class="primary-btn" onclick="submitFinalOrder()">CONFIRM & DISPATCH</button>
     </div>
   </div>
-
-  <!-- MY PLACED ORDERS MODAL -->
-  <div id="ordersModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>My Orders</h3>
-      <div id="userOrdersList" style="margin: 15px 0;">No active orders found.</div>
-      <button class="btn-solid" onclick="closeModal('ordersModal')">Close</button>
-    </div>
-  </div>
-
-  <!-- OWNER INVENTORY & ORDERS ADMIN MODAL (3 TAPS) -->
-  <div id="adminModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>Store Control & Live Orders</h3>
-      <div style="display:flex; gap:10px; margin-bottom:15px;">
-        <button class="btn-solid" style="padding:6px; font-size:10px;" onclick="showAdminTab('stock')">Inventory</button>
-        <button class="btn-solid" style="padding:6px; font-size:10px;" onclick="showAdminTab('orders')">Customer Orders</button>
-      </div>
-
-      <div id="adminStockTab">
-        <div id="adminStockList"></div>
-        <button class="btn-solid" style="margin-top:10px;" onclick="saveAdminStock()">Save Stock</button>
-      </div>
-
-      <div id="adminOrdersTab" style="display:none;">
-        <div id="adminOrdersList"></div>
-      </div>
-
-      <button class="btn-cart-full" style="width:100%; margin-top:12px;" onclick="closeModal('adminModal')">Close</button>
-    </div>
-  </div>
-
-  <!-- Other Profile & Info Modals -->
-  <div id="profileEditModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>Profile & Shipping Address</h3>
-      <form onsubmit="updateProfileData(event)">
-        <input type="text" id="editName" class="input-field" placeholder="Full Name" required />
-        <input type="email" id="editEmail" class="input-field" placeholder="Email Address" required />
-        <input type="tel" id="editPhone" class="input-field" placeholder="Phone Number" required />
-        <textarea id="editAddress" class="input-field" placeholder="Complete Shipping Address" required></textarea>
-        <div class="actions-grid" style="margin-top: 10px;">
-          <button type="submit" class="btn-solid">Save Updates</button>
-          <button type="button" class="btn-cart-full" onclick="closeModal('profileEditModal')">Cancel</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="wishlistModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>My Wishlist</h3>
-      <div id="wishlistContent" style="margin: 15px 0;">No items wishlisted.</div>
-      <button class="btn-solid" onclick="closeModal('wishlistModal')">Close</button>
-    </div>
-  </div>
-
-  <div id="sizeGuideModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>Size Guide (Inches)</h3>
-      <p>S: Chest 42" | Length 27.5"<br>M: Chest 44" | Length 28.5"<br>L: Chest 46" | Length 29.5"<br>XL: Chest 48" | Length 30.5"</p>
-      <button class="btn-solid" style="margin-top: 15px;" onclick="closeModal('sizeGuideModal')">Close</button>
-    </div>
-  </div>
-
-  <div id="aboutModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>About THE AUREN</h3>
-      <p>Independent luxury design studio dedicated to heavyweight cottons and everyday essentials.</p>
-      <button class="btn-solid" style="margin-top: 15px;" onclick="closeModal('aboutModal')">Close</button>
-    </div>
-  </div>
-
-  <div id="policyModal" class="gen-modal">
-    <div class="gen-modal-box">
-      <h3>Legal & Policies</h3>
-      <p>Express 48h dispatch | 7-day hassle-free size replacement.</p>
-      <button class="btn-solid" style="margin-top: 15px;" onclick="closeModal('policyModal')">Close</button>
-    </div>
-  </div>
-
-  <footer>
-    <p>© 2026 THE AUREN. All rights reserved.</p>
-  </footer>
 
   <script>
-    // Configured Razorpay Test Key
-    const RAZORPAY_KEY_ID = "rzp_test_TVk8p918iozbvk";
-    
-    let defaultInventory = {
-      1: { 'S': 3, 'M': 5, 'L': 2, 'XL': 0 },
-      2: { 'S': 2, 'M': 4, 'L': 1, 'XL': 2 }
+    /* -------------------------------------------------------------
+       1. FIREBASE SETUP & INITIALIZATION
+    ------------------------------------------------------------- */
+    const firebaseConfig = {
+      apiKey: "AIzaSyAk3Sop3X1JfEZxnG0D_jFTF0_9xmV23H8",
+      authDomain: "the-auren-auth.firebaseapp.com",
+      projectId: "the-auren-auth",
+      storageBucket: "the-auren-auth.firebasestorage.app",
+      messagingSenderId: "211517147742",
+      appId: "1:211517147742:web:e1ed0407601df06b9a42cf"
     };
 
-    let inventory = JSON.parse(localStorage.getItem('theAurenInventory')) || defaultInventory;
-    let placedOrders = JSON.parse(localStorage.getItem('theAurenOrders')) || [];
-    let selectedSizes = { 1: 'S', 2: 'S' };
-    let bag = [];
-    let wishlist = [];
-    let user = null;
-    let activeCheckoutItems = [];
-    let currentPaymentMethod = 'ONLINE';
-    let logoClicks = 0;
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const stored = localStorage.getItem('theAurenMember');
-      if (stored) {
-        user = JSON.parse(stored);
-        document.getElementById('signupModal').style.display = 'none';
-        updateDashboardUser();
-      }
-      renderAllSizeSelectors();
-      updateUserOrdersUI();
+    // Setup invisible Recaptcha
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+      'size': 'invisible'
     });
 
-    function handleLogoClick() {
-      logoClicks++;
-      if (logoClicks >= 3) {
-        logoClicks = 0;
-        openAdminPanel();
-      }
-      setTimeout(() => { logoClicks = 0; }, 1500);
-    }
+    let confirmationResultGlobal = null;
 
-    function openAdminPanel() {
-      let container = document.getElementById('adminStockList');
-      let html = '';
-      for (let pId in inventory) {
-        html += `<strong style="display:block; margin: 10px 0 5px; color:#fff;">Product #${pId}</strong>`;
-        for (let s in inventory[pId]) {
-          html += `
-            <div class="admin-row">
-              <span>Size ${s} Stock:</span>
-              <input type="number" class="admin-input" id="stock_${pId}_${s}" value="${inventory[pId][s]}" min="0">
-            </div>
-          `;
-        }
+    /* -------------------------------------------------------------
+       2. PRODUCTS DATA
+    ------------------------------------------------------------- */
+    const products = [
+      {
+        id: "AUR-01",
+        title: "Obsidian Boxy Hoodie",
+        price: 3499,
+        img: "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "AUR-02",
+        title: "Monolith Oversized Tee",
+        price: 1899,
+        img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&auto=format&fit=crop&q=80"
+      },
+      {
+        id: "AUR-03",
+        title: "Tactical Cargo Pant",
+        price: 4299,
+        img: "https://images.unsplash.com/photo-1517445312882-bc9910d016b7?w=800&auto=format&fit=crop&q=80"
       }
-      container.innerHTML = html;
-      renderAdminOrders();
-      openModal('adminModal');
-    }
+    ];
 
-    function showAdminTab(tab) {
-      document.getElementById('adminStockTab').style.display = tab === 'stock' ? 'block' : 'none';
-      document.getElementById('adminOrdersTab').style.display = tab === 'orders' ? 'block' : 'none';
-    }
+    let cart = [];
 
-    function renderAdminOrders() {
-      let container = document.getElementById('adminOrdersList');
-      if (placedOrders.length === 0) {
-        container.innerHTML = "<p style='color:#888; font-size:11px;'>No orders received yet.</p>";
-        return;
-      }
-      container.innerHTML = placedOrders.map(o => `
-        <div style="background:#000; border:1px solid #222; padding:10px; margin-bottom:8px; font-size:10px;">
-          <div><strong style="color:#fff;">${o.id}</strong> | ${o.date}</div>
-          <div style="color:#aaa;">Customer: ${o.customer.name} (${o.customer.phone})</div>
-          <div style="color:#aaa;">Address: ${o.customer.address}</div>
-          <div style="color:#fff; margin-top:4px;">Items: ${o.items.map(i => i.title + ' [' + i.size + ']').join(', ')}</div>
-          <div style="color:var(--success); font-weight:700; margin-top:2px;">Total: ₹${o.total} (${o.payment})</div>
-          ${o.paymentId ? `<div style="color:#9e9e9e;">Razorpay ID: ${o.paymentId}</div>` : ''}
+    // Render Catalog
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-grid');
+      grid.innerHTML = products.map(p => `
+        <div class="card">
+          <img src="${p.img}" alt="${p.title}" class="card-img" />
+          <div class="card-body">
+            <h4 class="card-title">${p.title}</h4>
+            <p class="card-price">₹${p.price.toLocaleString('en-IN')}</p>
+            <button class="add-btn" onclick="addToCart('${p.id}')">ADD TO SELECTION</button>
+          </div>
         </div>
       `).join('');
     }
 
-    function saveAdminStock() {
-      for (let pId in inventory) {
-        for (let s in inventory[pId]) {
-          let val = document.getElementById(`stock_${pId}_${s}`).value;
-          inventory[pId][s] = parseInt(val) || 0;
-        }
+    /* -------------------------------------------------------------
+       3. CART LOGIC
+    ------------------------------------------------------------- */
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      cart.push(product);
+      updateCartUI();
+      toggleCart(true);
+    }
+
+    function updateCartUI() {
+      document.getElementById('cart-count').innerText = cart.length;
+      const list = document.getElementById('cart-list');
+      if (cart.length === 0) {
+        list.innerHTML = `<p style="color: #666; font-size: 0.85rem; text-align: center; margin-top: 40px;">Your selection is empty.</p>`;
+        document.getElementById('cart-total-amount').innerText = "₹0";
+        return;
       }
-      localStorage.setItem('theAurenInventory', JSON.stringify(inventory));
-      renderAllSizeSelectors();
-      closeModal('adminModal');
-      alert("Inventory updated successfully!");
-    }
-
-    function renderAllSizeSelectors() {
-      for (let pId in inventory) {
-        let grid = document.getElementById('sizes-' + pId);
-        if (!grid) continue;
-        grid.innerHTML = '';
-
-        for (let s in inventory[pId]) {
-          let count = inventory[pId][s];
-          let isSold = count <= 0;
-          let isActive = selectedSizes[pId] === s && !isSold;
-
-          let pill = document.createElement('div');
-          pill.className = `size-pill ${isActive ? 'active' : ''} ${isSold ? 'disabled' : ''}`;
-          pill.innerHTML = `${s} <span class="stock-tag" style="${isSold ? 'color:#666' : ''}">${isSold ? 'Sold' : count + ' left'}</span>`;
-          
-          if (!isSold) {
-            pill.onclick = () => {
-              selectedSizes[pId] = s;
-              renderAllSizeSelectors();
-            };
-          }
-          grid.appendChild(pill);
-        }
-      }
-    }
-
-    function toggleDrawer(open) {
-      document.getElementById('accountDrawer').classList.toggle('active', open);
-      document.getElementById('drawerOverlay').classList.toggle('active', open);
-    }
-
-    function openModal(id) {
-      document.getElementById(id).style.display = 'flex';
-      toggleDrawer(false);
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
-    }
-
-    function updateDashboardUser() {
-      if (!user) return;
-      document.getElementById('dashUserName').innerText = user.name.toUpperCase();
-      document.getElementById('dashUserContact').innerText = user.phone + " | " + user.email;
       
-      document.getElementById('editName').value = user.name;
-      document.getElementById('editEmail').value = user.email;
-      document.getElementById('editPhone').value = user.phone;
-      document.getElementById('editAddress').value = user.address;
-
-      if(document.getElementById('p1-del-addr')) document.getElementById('p1-del-addr').innerText = user.name + " - " + user.address.substring(0, 24) + "...";
-      if(document.getElementById('p2-del-addr')) document.getElementById('p2-del-addr').innerText = user.name + " - " + user.address.substring(0, 24) + "...";
-    }
-
-    function saveUserAccess(e) {
-      e.preventDefault();
-      user = {
-        name: document.getElementById('cName').value.trim(),
-        email: document.getElementById('cEmail').value.trim(),
-        phone: document.getElementById('cPhone').value.trim(),
-        address: document.getElementById('cAddress').value.trim()
-      };
-      localStorage.setItem('theAurenMember', JSON.stringify(user));
-      document.getElementById('signupModal').style.display = 'none';
-      updateDashboardUser();
-    }
-
-    function updateProfileData(e) {
-      e.preventDefault();
-      user = {
-        name: document.getElementById('editName').value.trim(),
-        email: document.getElementById('editEmail').value.trim(),
-        phone: document.getElementById('editPhone').value.trim(),
-        address: document.getElementById('editAddress').value.trim()
-      };
-      localStorage.setItem('theAurenMember', JSON.stringify(user));
-      updateDashboardUser();
-      closeModal('profileEditModal');
-      alert("Address and profile updated.");
-    }
-
-    function addToBag(title, price, pId) {
-      bag.push({ title: title, price: price, size: selectedSizes[pId], pId: pId });
-      updateBagUI();
-    }
-
-    function updateBagUI() {
-      let bar = document.getElementById('cartBar');
-      let label = document.getElementById('cartLabel');
-      if (bag.length > 0) {
-        bar.style.display = 'flex';
-        let total = bag.reduce((sum, item) => sum + item.price, 0);
-        label.innerText = bag.length + " Items | ₹" + total;
-      }
-    }
-
-    /* CHECKOUT MODAL LOGIC */
-    function startDirectCheckout(title, price, pId) {
-      if (!user) return;
-      activeCheckoutItems = [{ title: title, price: price, size: selectedSizes[pId], pId: pId }];
-      openCheckoutModal();
-    }
-
-    function startBagCheckout() {
-      if (bag.length === 0 || !user) return;
-      activeCheckoutItems = [...bag];
-      openCheckoutModal();
-    }
-
-    function openCheckoutModal() {
-      document.getElementById('checkoutCustomerName').innerText = user.name + " (" + user.phone + ")";
-      document.getElementById('checkoutCustomerAddress').innerText = user.address;
-
-      let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
-      document.getElementById('coSubtotal').innerText = "₹" + total;
-      document.getElementById('coTotal').innerText = "₹" + total;
-
-      selectPayOption('ONLINE');
-      openModal('checkoutModal');
-    }
-
-    function selectPayOption(method) {
-      currentPaymentMethod = method;
-      document.getElementById('opt-online').classList.toggle('selected', method === 'ONLINE');
-      document.getElementById('opt-cod').classList.toggle('selected', method === 'COD');
-
-      let area = document.getElementById('paymentContentArea');
-      let btn = document.getElementById('checkoutSubmitBtn');
-      let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
-
-      if (method === 'ONLINE') {
-        area.innerHTML = `
-          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa; text-align:center;">
-            🔒 Official Razorpay Gateway. Pay using any UPI app (GPay, PhonePe, Paytm), Debit/Credit Card, or Netbanking.
+      let total = 0;
+      list.innerHTML = cart.map((item, index) => {
+        total += item.price;
+        return `
+          <div class="cart-item">
+            <div>
+              <div style="font-weight: 500;">${item.title}</div>
+              <div style="color: #777;">₹${item.price.toLocaleString('en-IN')}</div>
+            </div>
+            <button onclick="removeFromCart(${index})" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">&times;</button>
           </div>
         `;
-        btn.innerText = `Pay ₹${total} via Razorpay`;
-      } else if (method === 'COD') {
-        area.innerHTML = `
-          <div style="background:#000; border:1px solid var(--surface-border); padding:15px; margin:15px 0; font-size:11px; color:#aaa; text-align:center;">
-            📦 Cash on Delivery confirmed. Please keep ₹${total} cash ready at delivery.
-          </div>
-        `;
-        btn.innerText = `Confirm COD Order`;
-      }
+      }).join('');
+      
+      document.getElementById('cart-total-amount').innerText = `₹${total.toLocaleString('en-IN')}`;
     }
 
-    function processOrderCheckout() {
-      if (currentPaymentMethod === 'ONLINE') {
-        initiateRazorpayPayment();
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function toggleCart(forceOpen = false) {
+      const drawer = document.getElementById('cart-drawer');
+      if (forceOpen) {
+        drawer.classList.add('open');
       } else {
-        finalizeOrder("COD_ORDER");
+        drawer.classList.toggle('open');
       }
     }
 
-    /* RAZORPAY INTEGRATION */
-    function initiateRazorpayPayment() {
-      let totalAmount = activeCheckoutItems.reduce((sum, item) => sum + item.price, 0);
-
-      let options = {
-        "key": RAZORPAY_KEY_ID,
-        "amount": totalAmount * 100, // Razorpay amount in paise
-        "currency": "INR",
-        "name": "THE AUREN",
-        "description": "Drop 01 Checkout",
-        "handler": function (response) {
-          // Triggered only after bank verifies transaction
-          finalizeOrder(response.razorpay_payment_id);
-        },
-        "prefill": {
-          "name": user ? user.name : "",
-          "email": user ? user.email : "",
-          "contact": user ? user.phone : ""
-        },
-        "theme": {
-          "color": "#050505"
-        }
-      };
-
-      let rzp = new Razorpay(options);
-      rzp.on('payment.failed', function (response) {
-        alert("Payment Failed: " + response.error.description);
-      });
-      rzp.open();
+    /* -------------------------------------------------------------
+       4. AUTH (OTP) FUNCTIONS
+    ------------------------------------------------------------- */
+    function openAuthModal() {
+      document.getElementById('auth-modal').style.display = 'flex';
     }
 
-    function finalizeOrder(paymentReference) {
-      let orderId = "#AUR-" + Math.floor(1000 + Math.random() * 9000);
-      let total = activeCheckoutItems.reduce((sum, i) => sum + i.price, 0);
-
-      // Decrement Inventory
-      activeCheckoutItems.forEach(item => {
-        if (inventory[item.pId] && inventory[item.pId][item.size] > 0) {
-          inventory[item.pId][item.size]--;
-        }
-      });
-      localStorage.setItem('theAurenInventory', JSON.stringify(inventory));
-      renderAllSizeSelectors();
-
-      let newOrder = {
-        id: orderId,
-        date: new Date().toLocaleDateString('en-GB'),
-        total: total,
-        payment: currentPaymentMethod === 'ONLINE' ? 'Razorpay Verified' : 'COD',
-        paymentId: paymentReference,
-        customer: { ...user },
-        items: [...activeCheckoutItems]
-      };
-
-      placedOrders.unshift(newOrder);
-      localStorage.setItem('theAurenOrders', JSON.stringify(placedOrders));
-
-      bag = [];
-      document.getElementById('cartBar').style.display = 'none';
-
-      document.getElementById('successOrderId').innerText = orderId;
-      document.getElementById('successPayMethod').innerText = currentPaymentMethod === 'ONLINE' ? `VERIFIED (${paymentReference})` : 'COD PENDING';
-      document.getElementById('successItemList').innerHTML = activeCheckoutItems.map(i => `• ${i.title} (${i.size}) - ₹${i.price}`).join('<br>');
-
-      closeModal('checkoutModal');
-      openModal('orderSuccessModal');
-      updateUserOrdersUI();
+    function closeAuthModal() {
+      document.getElementById('auth-modal').style.display = 'none';
     }
 
-    function closeOrderSuccess() {
-      closeModal('orderSuccessModal');
-    }
+    function handleSendOTP() {
+      const phone = document.getElementById('phone-number').value.trim();
+      const status = document.getElementById('auth-status');
 
-    function updateUserOrdersUI() {
-      document.getElementById('userOrderCount').innerText = placedOrders.length;
-      let container = document.getElementById('userOrdersList');
-      if (placedOrders.length === 0) {
-        container.innerHTML = "<p style='color:#888; font-size:11px;'>No orders placed yet.</p>";
+      if (!phone.startsWith('+')) {
+        status.innerText = "Please prefix country code (+91...)";
         return;
       }
-      container.innerHTML = placedOrders.map(o => `
-        <div style="background:#080808; border:1px solid #222; padding:12px; margin-bottom:10px; font-size:11px;">
-          <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-            <strong style="color:#fff;">${o.id}</strong>
-            <span style="color:var(--success);">${o.payment}</span>
-          </div>
-          <div style="color:#aaa;">Placed on: ${o.date}</div>
-          <div style="color:#ddd; margin-top:4px;">${o.items.map(i => i.title + ' (' + i.size + ')').join(', ')}</div>
-          <div style="font-weight:700; color:#fff; margin-top:4px;">Total: ₹${o.total}</div>
-        </div>
-      `).join('');
+
+      status.innerText = "Transmitting OTP...";
+      
+      auth.signInWithPhoneNumber(phone, window.recaptchaVerifier)
+        .then((confirmationResult) => {
+          confirmationResultGlobal = confirmationResult;
+          document.getElementById('phone-box').style.display = 'none';
+          document.getElementById('otp-box').style.display = 'block';
+          status.innerText = "Passcode dispatched to " + phone;
+        })
+        .catch((error) => {
+          status.innerText = error.message;
+        });
     }
 
-    function toggleWishlist(pId, title, price) {
-      let idx = wishlist.findIndex(w => w.id === pId);
-      let btn = document.getElementById('wbtn-' + pId);
-      if (idx > -1) {
-        wishlist.splice(idx, 1);
-        btn.classList.remove('active');
-      } else {
-        wishlist.push({ id: pId, title: title, price: price });
-        btn.classList.add('active');
+    function handleVerifyOTP() {
+      const code = document.getElementById('otp-code').value.trim();
+      const status = document.getElementById('auth-status');
+
+      if (code.length !== 6) {
+        status.innerText = "Enter valid 6-digit code";
+        return;
       }
-      localStorage.setItem('theAurenWishlist', JSON.stringify(wishlist));
-      document.getElementById('wishCount').innerText = wishlist.length;
+
+      status.innerText = "Verifying credentials...";
+      confirmationResultGlobal.confirm(code)
+        .then((result) => {
+          const user = result.user;
+          localStorage.setItem('auren_user', JSON.stringify({ phone: user.phoneNumber }));
+          checkAuthState();
+          status.innerText = "Access Granted.";
+          setTimeout(() => {
+            closeAuthModal();
+          }, 800);
+        })
+        .catch((err) => {
+          status.innerText = "Verification failed. Check passcode.";
+        });
     }
 
-    function resetUserSession() {
-      if (confirm("Are you sure you want to log out and clear saved data?")) {
-        localStorage.clear();
-        location.reload();
+    function checkAuthState() {
+      const savedUser = localStorage.getItem('auren_user');
+      const authBtn = document.getElementById('auth-btn');
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        authBtn.innerText = "PROFILE: " + parsed.phone.slice(-4);
+        authBtn.onclick = () => {
+          if (confirm("Disconnect Member Session?")) {
+            localStorage.removeItem('auren_user');
+            location.reload();
+          }
+        };
       }
     }
+
+    /* -------------------------------------------------------------
+       5. ORDER SUBMISSION & STORE OWNER SYNC
+    ------------------------------------------------------------- */
+    function openCheckout() {
+      if (cart.length === 0) {
+        alert("Select apparel before proceeding.");
+        return;
+      }
+      
+      // Require Login
+      const savedUser = localStorage.getItem('auren_user');
+      if (!savedUser) {
+        toggleCart(false);
+        openAuthModal();
+        alert("Please authenticate membership via phone OTP first.");
+        return;
+      }
+
+      toggleCart(false);
+      document.getElementById('checkout-modal').style.display = 'flex';
+    }
+
+    function closeCheckout() {
+      document.getElementById('checkout-modal').style.display = 'none';
+    }
+
+    function submitFinalOrder() {
+      const name = document.getElementById('cust-name').value.trim();
+      const address = document.getElementById('cust-address').value.trim();
+      const city = document.getElementById('cust-city').value.trim();
+      const user = JSON.parse(localStorage.getItem('auren_user'));
+
+      if (!name || !address || !city) {
+        alert("Please fill all dispatch fields.");
+        return;
+      }
+
+      const total = cart.reduce((acc, c) => acc + c.price, 0);
+      const itemsList = cart.map(i => `- ${i.title} (₹${i.price})`).join('%0A');
+
+      // Instant Order Forwarding to Store Owner's WhatsApp
+      const STORE_PHONE = "918447311105";
+      
+      const message = `*NEW AUREN ORDER RECEIVED*%0A%0A` +
+        `*Customer Name:* ${name}%0A` +
+        `*Phone:* ${user.phone}%0A` +
+        `*Delivery Address:* ${address}, ${city}%0A%0A` +
+        `*Ordered Items:*%0A${itemsList}%0A%0A` +
+        `*Total Value:* ₹${total.toLocaleString('en-IN')}%0A` +
+        `*Status:* Pending Confirmation`;
+
+      // Redirect directly to WhatsApp with pre-filled order
+      window.open(`https://wa.me/${STORE_PHONE}?text=${message}`, '_blank');
+
+      alert("Order Generated! Redirecting dispatch details to Auren Concierge...");
+      cart = [];
+      updateCartUI();
+      closeCheckout();
+    }
+
+    // Init Page
+    renderCatalog();
+    updateCartUI();
+    checkAuthState();
   </script>
-
 </body>
 </html>
